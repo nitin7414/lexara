@@ -1,0 +1,151 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+}
+
+model User {
+  id               String          @id @default(cuid())
+  clerkId          String          @unique
+  email            String          @unique
+  name             String?
+  imageUrl         String?
+  goal             Goal?
+  role             UserRole        @default(INDEPENDENT)
+  organizationId   String?
+  organization     Organization?   @relation(fields: [organizationId], references: [id])
+  streak           UserStreak?
+  progress         UserProgress[]
+  sentRequests     FriendRequest[] @relation("SentRequests")
+  receivedRequests FriendRequest[] @relation("ReceivedRequests")
+  friends          Friendship[]    @relation("UserFriends")
+  friendOf         Friendship[]    @relation("FriendOf")
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+}
+
+model Organization {
+  id          String     @id @default(cuid())
+  clerkOrgId  String     @unique
+  name        String
+  slug        String     @unique
+  type        OrgType
+  logoUrl     String?
+  memberLimit Int        @default(50)
+  members     User[]
+  wordPacks   WordPack[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model WordPack {
+  id             String        @id @default(cuid())
+  name           String
+  description    String?
+  goal           Goal?
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  words          Word[]
+  isDefault      Boolean       @default(false)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+model Word {
+  id         String         @id @default(cuid())
+  word       String
+  meaning    String
+  example    String
+  difficulty Difficulty
+  wordPackId String
+  wordPack   WordPack       @relation(fields: [wordPackId], references: [id])
+  progress   UserProgress[]
+  createdAt  DateTime       @default(now())
+}
+
+model UserStreak {
+  id                 String    @id @default(cuid())
+  userId             String    @unique
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  currentStreak      Int       @default(0)
+  longestStreak      Int       @default(0)
+  lastCompletedAt    DateTime?
+  totalDaysCompleted Int       @default(0)
+  updatedAt          DateTime  @updatedAt
+}
+
+model UserProgress {
+  id          String        @id @default(cuid())
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  wordId      String
+  word        Word          @relation(fields: [wordId], references: [id])
+  stage       LearningStage
+  correct     Boolean       @default(false)
+  attempts    Int           @default(0)
+  completedAt DateTime?
+  createdAt   DateTime      @default(now())
+
+  @@unique([userId, wordId])
+}
+
+model FriendRequest {
+  id         String        @id @default(cuid())
+  senderId   String
+  sender     User          @relation("SentRequests", fields: [senderId], references: [id])
+  receiverId String
+  receiver   User          @relation("ReceivedRequests", fields: [receiverId], references: [id])
+  status     RequestStatus @default(PENDING)
+  createdAt  DateTime      @default(now())
+
+  @@unique([senderId, receiverId])
+}
+
+model Friendship {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation("UserFriends", fields: [userId], references: [id])
+  friendId  String
+  friend    User     @relation("FriendOf", fields: [friendId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, friendId])
+}
+
+enum Goal {
+  ACADEMIC
+  EXAM_PREP
+  PROFESSIONAL
+}
+
+enum UserRole {
+  INDEPENDENT
+  ORG_MEMBER
+  ORG_ADMIN
+}
+
+enum OrgType {
+  COACHING
+  CORPORATE
+  SCHOOL
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum LearningStage {
+  INTRODUCED
+  PRACTICED
+  TESTED
+}
+
+enum RequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
