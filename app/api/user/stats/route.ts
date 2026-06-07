@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
+import { Friendship } from "@prisma/client";
 
 export async function GET() {
   try {
@@ -86,7 +87,7 @@ export async function GET() {
 
     // 4. Rank among friends
     // Find all friend user IDs
-    const friendIds = friendships.map((f) =>
+    const friendIds = friendships.map((f: Friendship) =>
       f.userId === user.id ? f.friendId : f.userId
     );
     const candidateIds = [user.id, ...friendIds];
