@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { StreakRing } from "@/components/streak-ring";
+import { StreakDisplay } from "@/components/streak-display";
+import { IconBox } from "@/components/icon-box";
 import { cn } from "@/lib/utils";
 
 interface StreakData {
@@ -67,26 +68,26 @@ export default function StreakPage() {
 
   return (
     <div className="space-y-6 font-sans select-none">
-      {/* Large Streak Ring Header */}
-      <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6 flex flex-col items-center text-center space-y-4">
-        {data && <StreakRing count={data.currentStreak} size="lg" />}
+      {/* Large Streak Display Header (Page bg is F4F3FF, card bg is FFFFFF with E8E6FF border) */}
+      <div className="bg-white border border-[#E8E6FF] rounded-xl p-6 flex flex-col items-center text-center space-y-4">
+        {data && <StreakDisplay count={data.currentStreak} size="lg" />}
         <div>
-          <h2 className="text-xl font-black text-zinc-900 dark:text-zinc-50">
+          <h2 className="text-[15px] font-medium text-lexara-900 leading-none">
             {data?.currentStreak} Day Streak!
           </h2>
-          <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 mt-1">
+          <p className="text-[10px] text-zinc-400 font-semibold mt-1.5">
             Best streak: {data?.longestStreak} days
           </p>
         </div>
       </div>
 
       {/* 14-Day Calendar Strip */}
-      <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-5 space-y-4">
+      <div className="bg-white border border-[#E8E6FF] rounded-xl p-5 space-y-4">
         <div>
-          <h3 className="text-xs font-black text-zinc-900 dark:text-zinc-100 uppercase tracking-wider">
+          <h3 className="text-[11px] font-bold text-lexara-600 uppercase tracking-wider">
             Last 14 Days
           </h3>
-          <p className="text-[10px] font-semibold text-zinc-500 dark:text-zinc-400">
+          <p className="text-[10px] font-semibold text-zinc-400 mt-0.5">
             Complete daily sessions to lock in your streak
           </p>
         </div>
@@ -98,17 +99,17 @@ export default function StreakPage() {
               key={idx}
               className="flex flex-col items-center space-y-1.5"
             >
-              <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500">
+              <span className="text-[10px] font-bold text-zinc-400">
                 {day.weekday}
               </span>
               <div
                 className={cn(
                   "w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xs transition-all",
                   day.completed
-                    ? "bg-primary text-white"
+                    ? "bg-[#7F77DD] text-white"
                     : day.isToday
-                    ? "border-2 border-primary text-primary bg-primary-light/30"
-                    : "bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-600"
+                    ? "border-2 border-[#7F77DD] text-lexara-800 bg-transparent"
+                    : "bg-lexara-100 text-[#AFA9EC]"
                 )}
               >
                 {day.dayOfMonth}
@@ -118,44 +119,44 @@ export default function StreakPage() {
         </div>
       </div>
 
-      {/* Stats Summary Row */}
+      {/* Stats Summary Row (Stat cards use EEEDFE, no border) */}
       <div className="grid grid-cols-3 gap-3">
-        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-4 rounded-xl text-center">
-          <span className="text-[9px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest block">
+        <div className="bg-[#EEEDFE] p-4 rounded-xl text-center">
+          <span className="text-[9px] font-bold text-lexara-600 uppercase tracking-widest block leading-none">
             Days Active
           </span>
-          <span className="text-base font-black text-zinc-900 dark:text-zinc-50 mt-1 block">
+          <span className="text-[15px] font-medium text-lexara-900 mt-2 block leading-none">
             {data?.totalDays}
           </span>
         </div>
-        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-4 rounded-xl text-center">
-          <span className="text-[9px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest block">
+        <div className="bg-[#EEEDFE] p-4 rounded-xl text-center">
+          <span className="text-[9px] font-bold text-lexara-600 uppercase tracking-widest block leading-none">
             Words Learned
           </span>
-          <span className="text-base font-black text-zinc-900 dark:text-zinc-50 mt-1 block">
+          <span className="text-[15px] font-medium text-lexara-900 mt-2 block leading-none">
             {data?.totalWords}
           </span>
         </div>
-        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-4 rounded-xl text-center">
-          <span className="text-[9px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest block">
+        <div className="bg-[#EEEDFE] p-4 rounded-xl text-center">
+          <span className="text-[9px] font-bold text-lexara-600 uppercase tracking-widest block leading-none">
             Avg Accuracy
           </span>
-          <span className="text-base font-black text-zinc-900 dark:text-zinc-50 mt-1 block">
+          <span className="text-[15px] font-medium text-lexara-900 mt-2 block leading-none">
             {data?.accuracy}%
           </span>
         </div>
       </div>
 
       {/* Streak Shield Section */}
-      <div className="bg-zinc-100 dark:bg-zinc-900/40 border border-dashed border-zinc-300 dark:border-zinc-800 p-6 rounded-xl text-center space-y-2">
-        <div className="w-10 h-10 bg-zinc-200 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-500 rounded-full flex items-center justify-center mx-auto">
-          <i className="ti ti-shield text-lg" />
+      <div className="bg-white border border-dashed border-[#E8E6FF] p-6 rounded-xl text-center space-y-3">
+        <div className="flex justify-center">
+          <IconBox context="info" icon="ti-shield" size="md" />
         </div>
         <div className="space-y-1">
-          <h4 className="text-sm font-bold text-zinc-800 dark:text-zinc-200">
+          <h4 className="text-[12px] font-bold text-lexara-800">
             Streak Shield
           </h4>
-          <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 max-w-xs mx-auto">
+          <p className="text-[10px] font-medium text-zinc-400 max-w-xs mx-auto leading-relaxed">
             Coming soon: Protect your streak even on days when you can't log in.
           </p>
         </div>
@@ -167,35 +168,34 @@ export default function StreakPage() {
 function StreakSkeleton() {
   return (
     <div className="space-y-6 animate-pulse select-none">
-      <div className="h-44 bg-zinc-200 dark:bg-zinc-800 rounded-xl" />
-      <div className="h-48 bg-zinc-200 dark:bg-zinc-800 rounded-xl" />
+      <div className="h-44 bg-zinc-200 rounded-xl" />
+      <div className="h-48 bg-zinc-200 rounded-xl" />
       <div className="grid grid-cols-3 gap-3">
-        <div className="h-20 bg-zinc-200 dark:bg-zinc-800 rounded-xl" />
-        <div className="h-20 bg-zinc-200 dark:bg-zinc-800 rounded-xl" />
-        <div className="h-20 bg-zinc-200 dark:bg-zinc-800 rounded-xl" />
+        <div className="h-20 bg-zinc-200 rounded-xl" />
+        <div className="h-20 bg-zinc-200 rounded-xl" />
+        <div className="h-20 bg-zinc-200 rounded-xl" />
       </div>
-      <div className="h-28 bg-zinc-200 dark:bg-zinc-800 rounded-xl" />
     </div>
   );
 }
 
 function StreakError() {
   return (
-    <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-8 rounded-xl text-center space-y-4 font-sans select-none">
-      <div className="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto">
+    <div className="bg-white border border-[#E8E6FF] p-8 rounded-xl text-center space-y-4 font-sans select-none">
+      <div className="w-12 h-12 bg-red-100 text-[#D85A30] rounded-full flex items-center justify-center mx-auto">
         <i className="ti ti-alert-triangle text-xl" />
       </div>
       <div className="space-y-1">
-        <h3 className="font-bold text-zinc-900 dark:text-zinc-50">
+        <h3 className="text-[12px] font-bold text-lexara-900">
           Something went wrong.
         </h3>
-        <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+        <p className="text-[10px] text-zinc-400">
           We couldn't load your streak calendar. Try again.
         </p>
       </div>
       <button
         onClick={() => window.location.reload()}
-        className="px-6 py-2.5 bg-primary text-white text-xs font-bold rounded-lg uppercase tracking-wider"
+        className="px-6 py-2.5 bg-[#7F77DD] text-white text-xs font-bold rounded-lg uppercase tracking-wider border-none"
       >
         Try again
       </button>

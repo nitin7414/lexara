@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { IconBox } from "@/components/icon-box";
 import { cn } from "@/lib/utils";
 
 const GOALS = [
@@ -10,18 +11,21 @@ const GOALS = [
     title: "Academic student",
     subtitle: "NCERT level, literary vocabulary",
     icon: "ti-school",
+    context: "progress" as const,
   },
   {
     id: "EXAM_PREP",
     title: "Competitive exams",
     subtitle: "UPSC, CAT, SSC, Banking",
     icon: "ti-trophy",
+    context: "trophy" as const,
   },
   {
     id: "PROFESSIONAL",
     title: "Working professional",
     subtitle: "Business English, corporate communication",
     icon: "ti-briefcase",
+    context: "info" as const,
   },
 ];
 
@@ -56,21 +60,21 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="min-h-[80vh] flex flex-col justify-center items-center font-sans">
-      <div className="w-full max-w-sm flex flex-col space-y-8">
+    <div className="min-h-[75vh] flex flex-col justify-center items-center font-sans">
+      <div className="w-full max-w-sm flex flex-col space-y-6">
         {/* Brand Logo */}
         <div className="text-center">
-          <span className="text-3xl font-black text-primary select-none tracking-tight">
+          <span className="text-[20px] font-black text-lexara-500 select-none tracking-tight">
             Lexara
           </span>
         </div>
 
         {/* Heading Header */}
-        <div className="text-center space-y-2 select-none">
-          <h1 className="text-2xl font-black text-zinc-900 dark:text-zinc-50">
+        <div className="text-center space-y-1.5 select-none">
+          <h1 className="text-[15px] font-medium text-lexara-900">
             What's your goal?
           </h1>
-          <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
+          <p className="text-[11px] text-lexara-600">
             We'll personalize your words based on your answer.
           </p>
         </div>
@@ -85,37 +89,23 @@ export default function OnboardingPage() {
                 onClick={() => setSelectedGoal(goal.id)}
                 disabled={loading}
                 className={cn(
-                  "w-full text-left flex items-center p-4 rounded-xl border-2 transition-all duration-200 select-none cursor-pointer",
+                  "w-full text-left flex items-center p-4 rounded-xl border transition-all duration-200 select-none cursor-pointer",
                   isSelected
-                    ? "bg-primary-light border-primary"
-                    : "bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900/60"
+                    ? "bg-lexara-100 border-2 border-lexara-500 p-[15px]" // 2px border compensates 1px padding
+                    : "bg-white border border-[#E8E6FF] hover:bg-zinc-50/60"
                 )}
               >
-                {/* Left Icon */}
-                <div
-                  className={cn(
-                    "flex items-center justify-center w-12 h-12 rounded-xl mr-4 transition-colors",
-                    isSelected
-                      ? "bg-primary text-white"
-                      : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"
-                  )}
-                >
-                  <i className={cn("ti text-xl", goal.icon)} />
+                {/* Left Icon using context-colored IconBox */}
+                <div className="mr-4">
+                  <IconBox context={goal.context} icon={goal.icon} size="md" />
                 </div>
 
                 {/* Right Labels */}
                 <div className="flex-1">
-                  <h3
-                    className={cn(
-                      "font-bold text-sm",
-                      isSelected
-                        ? "text-primary-dark dark:text-primary"
-                        : "text-zinc-950 dark:text-zinc-50"
-                    )}
-                  >
+                  <h3 className="text-[12px] font-bold text-lexara-800">
                     {goal.title}
                   </h3>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400 font-semibold mt-0.5">
+                  <p className="text-[10px] text-zinc-400 font-medium mt-0.5">
                     {goal.subtitle}
                   </p>
                 </div>
@@ -124,15 +114,15 @@ export default function OnboardingPage() {
           })}
         </div>
 
-        {/* Action Button */}
+        {/* Action Button (CTAs Guidelines: radius 12px, padding 11px, size 13px, weight 500) */}
         <button
           onClick={handleContinue}
           disabled={!selectedGoal || loading}
           className={cn(
-            "w-full py-4.5 rounded-lg text-sm font-extrabold transition-all duration-200 tracking-wide shadow-none uppercase cursor-pointer select-none",
+            "w-full py-[11px] rounded-xl text-[13px] font-medium transition-all duration-200 tracking-wide uppercase cursor-pointer select-none border-none",
             selectedGoal
-              ? "bg-primary text-white hover:opacity-95"
-              : "bg-zinc-200 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-600 cursor-not-allowed"
+              ? "bg-[#7F77DD] text-white hover:opacity-95"
+              : "bg-lexara-100 text-lexara-400 cursor-not-allowed"
           )}
         >
           {loading ? "Personalizing..." : "Continue"}

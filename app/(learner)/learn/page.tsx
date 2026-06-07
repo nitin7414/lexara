@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { StageIndicator } from "@/components/stage-indicator";
 import { WordCard } from "@/components/word-card";
+import { IconBox } from "@/components/icon-box";
 import { cn } from "@/lib/utils";
 
 interface Word {
@@ -15,6 +16,8 @@ interface Word {
 }
 
 type Stage = "introduce" | "practice" | "test" | "complete";
+
+const OPTION_LETTERS = ["A", "B", "C", "D"];
 
 export default function LearnPage() {
   const [currentStage, setCurrentStage] = useState<Stage>("introduce");
@@ -35,13 +38,9 @@ export default function LearnPage() {
   const [sessionScore, setSessionScore] = useState(0);
   const [savingResults, setSavingResults] = useState(false);
 
-  // Timer state for Test stage
-  const [timeLeft, setTimeLeft] = useState(15);
-  const [timerActive, setTimerActive] = useState(false);
-
   const router = useRouter();
 
-  // 1. Fetch Words on mount
+  // 1. Fetch Words
   useEffect(() => {
     async function fetchWords() {
       try {
@@ -65,72 +64,48 @@ export default function LearnPage() {
     fetchWords();
   }, []);
 
-  // 2. Generate multiple choice options for Practice & Test stages
+  // 2. Generate multiple choice options
   useEffect(() => {
     if (words.length === 0 || currentStage === "introduce" || currentStage === "complete") return;
 
     const currentWord = words[currentWordIndex];
     const otherWords = words.filter((w) => w.id !== currentWord.id).map((w) => w.word);
 
-    // Shuffle and pick 3 incorrect options
     const shuffledIncorrect = [...otherWords].sort(() => 0.5 - Math.random()).slice(0, 3);
-    // Shuffle correct option in
     const finalOptions = [...shuffledIncorrect, currentWord.word].sort(() => 0.5 - Math.random());
 
     setOptions(finalOptions);
     setSelectedAnswer(null);
     setIsCorrect(null);
-
-    // Setup timer if Stage 3 (Test)
-    if (currentStage === "test") {
-      setTimeLeft(15);
-      setTimerActive(true);
-    }
   }, [currentWordIndex, currentStage, words]);
 
-  // 3. Countdown timer implementation for Test stage
+  // 3. 15-second timer trigger via setTimeout (CSS handles smooth depletion)
   useEffect(() => {
-    if (currentStage !== "test" || !timerActive || words.length === 0) return;
+    if (currentStage !== "test" || selectedAnswer !== null || words.length === 0) return;
 
-    const startTime = Date.now();
-    const duration = 15000; // 15 seconds
+    const timer = setTimeout(() => {
+      handleTimeout();
+    }, 15000);
 
-    const timer = setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      const remaining = Math.max(0, 15 - elapsed / 1000);
-      setTimeLeft(remaining);
+    return () => clearTimeout(timer);
+  }, [currentWordIndex, currentStage, selectedAnswer, words]);
 
-      if (remaining <= 0) {
-        clearInterval(timer);
-        setTimerActive(false);
-        handleTimeout();
-      }
-    }, 100);
-
-    return () => clearInterval(timer);
-  }, [currentWordIndex, currentStage, timerActive, words]);
-
-  // Handlers
   const handleTimeout = () => {
     setIsCorrect(false);
-    setSelectedAnswer(""); // empty string represents timeout
+    setSelectedAnswer(""); // timeout mark
 
     const newTest = [...testResults];
     newTest[currentWordIndex] = false;
     setTestResults(newTest);
 
-    // Wait 1.5s to show time out, then advance
     setTimeout(() => {
       advanceStage();
     }, 1500);
   };
 
   const handleOptionSelect = (option: string) => {
-    if (selectedAnswer !== null) return; // Prevent double answering
+    if (selectedAnswer !== null) return;
     
-    // Stop timer
-    setTimerActive(false);
-
     const currentWord = words[currentWordIndex];
     const correct = option.toLowerCase() === currentWord.word.toLowerCase();
 
@@ -153,10 +128,8 @@ export default function LearnPage() {
 
   const advanceStage = async () => {
     if (currentWordIndex < 4) {
-      // Move to next word in current stage
       setCurrentWordIndex((prev) => prev + 1);
     } else {
-      // Transition to next stage
       if (currentStage === "introduce") {
         setCurrentStage("practice");
         setCurrentWordIndex(0);
@@ -164,7 +137,6 @@ export default function LearnPage() {
         setCurrentStage("test");
         setCurrentWordIndex(0);
       } else if (currentStage === "test") {
-        // Log final session progress
         await submitSession();
         setCurrentStage("complete");
       }
@@ -177,7 +149,7 @@ export default function LearnPage() {
       const finalResults = words.map((w, idx) => ({
         wordId: w.id,
         correct: testResults[idx] ?? false,
-        attempts: 2, // 1 in practice + 1 in test
+        attempts: 2,
       }));
 
       await fetch("/api/streak/update", {
@@ -193,12 +165,11 @@ export default function LearnPage() {
   };
 
   const handleShare = () => {
-    const text = `I scored ${sessionScore}/5 on Lexara today! 🔥 #vocabulary`;
+    const text = `I scored ${sessionScore}/5 on Lexara today!`;
     navigator.clipboard.writeText(text);
     alert("Score copied to clipboard!");
   };
 
-  // Rendering Helpers
   const renderSentenceWithBlank = (sentence: string, targetWord: string) => {
     const regex = new RegExp(`\\b${targetWord}\\b`, "gi");
     return sentence.replace(regex, "_______");
@@ -219,9 +190,16 @@ export default function LearnPage() {
   const currentWord = words[currentWordIndex];
 
   return (
-    <div className="space-y-6 font-sans select-none">
-      {/* Styles for animated checkmark */}
+    <div className="space-y-6 font-sans select-none text-[#CECBF6]">
+      {/* CSS Styles for animations (Depleting timer bar and completion checkmark) */}
       <style>{`
+        @keyframes timerDeplete {
+          from { width: 100%; }
+          to { width: 0%; }
+        }
+        .timer-bar-deplete {
+          animation: timerDeplete 15s linear forwards;
+        }
         .checkmark-circle {
           stroke-dasharray: 166;
           stroke-dashoffset: 166;
@@ -260,14 +238,10 @@ export default function LearnPage() {
         }
       `}</style>
 
-      {/* Stage Tracker bar */}
-      <StageIndicator
-        currentStage={currentStage}
-        currentWordIndex={currentWordIndex}
-        totalWords={words.length}
-      />
+      {/* Redesigned Stage Indicator with Close Button */}
+      <StageIndicator currentStage={currentStage} />
 
-      {/* STAGE 1: INTRODUCE */}
+      {/* STAGE 1: INTRODUCE (Hero purple word card) */}
       {currentStage === "introduce" && (
         <div className="space-y-6">
           <WordCard
@@ -276,59 +250,59 @@ export default function LearnPage() {
             example={currentWord.example}
             difficulty={currentWord.difficulty}
           />
+          {/* CTA: radius 12px, padding 11px, size 13px, weight 500 */}
           <button
             onClick={advanceStage}
-            className="w-full bg-primary hover:opacity-95 text-white py-4.5 rounded-lg text-sm font-extrabold tracking-wide uppercase transition-all cursor-pointer"
+            className="w-full bg-[#7F77DD] hover:opacity-95 text-white py-[11px] rounded-xl text-[13px] font-medium tracking-wide uppercase transition-all cursor-pointer border-none"
           >
-            Got it →
+            Got it
           </button>
         </div>
       )}
 
-      {/* STAGE 2: PRACTICE & STAGE 3: TEST */}
+      {/* STAGE 2: PRACTICE & STAGE 3: TEST (Dark Mode Session Styles) */}
       {(currentStage === "practice" || currentStage === "test") && (
-        <div className="space-y-6 relative">
-          {/* Timer bar for Test stage */}
-          {currentStage === "test" && selectedAnswer === null && (
-            <div className="w-full h-1 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-              <div
-                style={{ width: `${(timeLeft / 15) * 100}%` }}
-                className={cn(
-                  "h-full transition-all duration-100 ease-linear",
-                  timeLeft > 5 ? "bg-warning" : "bg-red-500"
-                )}
-              />
-            </div>
-          )}
+        <div className="space-y-6">
+          {/* Question Card Frame (bg: #241E40, border: 1px solid #3C3489) */}
+          <div className="bg-[#241E40] border border-[#3C3489] p-6 rounded-xl relative overflow-hidden">
+            {/* Urgency depleting CSS timer bar on test stage */}
+            {currentStage === "test" && selectedAnswer === null && (
+              <div className="absolute top-0 left-0 right-0 h-[3px] bg-[#3C3489] w-full">
+                <div
+                  key={currentWordIndex}
+                  className="h-full bg-[#EF9F27] timer-bar-deplete"
+                />
+              </div>
+            )}
 
-          {/* Question Sentence Block */}
-          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 rounded-xl space-y-4">
-            <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">
-              Fill in the blank
-            </span>
-            <p className="text-lg font-bold text-zinc-800 dark:text-zinc-100 italic leading-relaxed">
-              "{renderSentenceWithBlank(currentWord.example, currentWord.word)}"
-            </p>
+            <div className="space-y-4 pt-1.5">
+              <span className="text-[10px] font-bold text-[#5F5E5A] uppercase tracking-widest leading-none block">
+                Fill in the blank
+              </span>
+              <p className="text-[12px] font-medium text-[#CECBF6] italic leading-relaxed">
+                "{renderSentenceWithBlank(currentWord.example, currentWord.word)}"
+              </p>
+            </div>
           </div>
 
-          {/* Options grid (2x2) */}
+          {/* Redesigned Answer options */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {options.map((option) => {
+            {options.map((option, idx) => {
               const isSelected = selectedAnswer === option;
               const isAnswerCorrect = option.toLowerCase() === currentWord.word.toLowerCase();
+              const letter = OPTION_LETTERS[idx];
               
-              let cardStyle = "bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800/60";
+              let cardStyle = "bg-[#241E40] border-[#3C3489] text-[#AFA9EC] hover:bg-[#2D2550]/60";
               
               if (selectedAnswer !== null) {
                 if (isSelected) {
                   cardStyle = isAnswerCorrect
-                    ? "bg-success-light border-success text-success"
-                    : "bg-red-50 dark:bg-red-950/20 border-red-500 text-red-600";
+                    ? "bg-[#E1F5EE] border-[#5DCAA5] text-[#085041]"
+                    : "bg-[#FCEBEB] border-[#F09595] text-[#A32D2D]";
                 } else if (isAnswerCorrect) {
-                  // highlight correct answer if they got it wrong
-                  cardStyle = "bg-success-light border-success text-success opacity-80";
+                  cardStyle = "bg-[#E1F5EE] border-[#5DCAA5] text-[#085041] opacity-75";
                 } else {
-                  cardStyle = "bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 opacity-50";
+                  cardStyle = "bg-[#241E40] border-[#3C3489] text-[#AFA9EC] opacity-40";
                 }
               }
 
@@ -338,40 +312,57 @@ export default function LearnPage() {
                   disabled={selectedAnswer !== null}
                   onClick={() => handleOptionSelect(option)}
                   className={cn(
-                    "w-full text-left p-4 rounded-xl border-2 font-bold text-sm transition-all duration-200 select-none cursor-pointer",
+                    "w-full text-left p-4 rounded-xl border-2 flex items-center justify-between font-bold text-sm transition-all duration-200 select-none cursor-pointer",
                     cardStyle
                   )}
                 >
-                  {option}
+                  <div className="flex items-center">
+                    {/* Option letter badge: 20x20px, bg #2D2550, text #7F77DD */}
+                    <span className="w-[20px] h-[20px] rounded bg-[#2D2550] text-[#7F77DD] text-[10px] font-bold flex items-center justify-center mr-3 shrink-0">
+                      {letter}
+                    </span>
+                    <span className="text-[12px] font-medium">{option}</span>
+                  </div>
+                  {/* Append checkmark icon on the right for correct answer choice */}
+                  {selectedAnswer !== null && isAnswerCorrect && isSelected && (
+                    <i className="ti ti-check text-base leading-none ml-2 shrink-0" />
+                  )}
                 </button>
               );
             })}
           </div>
 
-          {/* Feedback bar */}
+          {/* Feedback UI and Action buttons */}
           {selectedAnswer !== null && (
             <div className="space-y-4 pt-2">
               {selectedAnswer === "" ? (
-                <div className="text-red-500 font-extrabold text-sm text-center select-none flex items-center justify-center gap-1.5 animate-bounce">
-                  ⚠️ Time ran out!
+                <div className="text-[#D85A30] font-bold text-[12px] text-center select-none flex items-center justify-center gap-1.5">
+                  <i className="ti ti-alert-triangle" />
+                  Time ran out!
                 </div>
               ) : isCorrect ? (
-                <div className="text-success font-extrabold text-sm text-center select-none flex items-center justify-center gap-1.5">
-                  ✓ Correct! Well done.
+                <div className="text-[#1D9E75] font-bold text-[12px] text-center select-none flex items-center justify-center gap-1.5">
+                  <i className="ti ti-circle-check" />
+                  Correct answer!
                 </div>
               ) : (
-                <div className="text-red-500 font-extrabold text-sm text-center select-none flex items-center justify-center gap-1.5">
-                  ✗ Incorrect. Correct word is: <span className="underline">{currentWord.word}</span>
+                <div className="text-[#D85A30] font-bold text-[12px] text-center select-none flex items-center justify-center gap-1.5">
+                  <i className="ti ti-alert-triangle" />
+                  Incorrect choice. Correct: <span className="underline ml-1 font-bold">{currentWord.word}</span>
                 </div>
               )}
 
-              {/* Next Button (only visible for non-timeouts, timeouts auto-advance after showing answer) */}
+              {/* Next Button — Success state gets bg: #1D9E75, else bg: #7F77DD */}
               {selectedAnswer !== "" && (
                 <button
                   onClick={advanceStage}
-                  className="w-full bg-primary hover:opacity-95 text-white py-4 rounded-lg text-sm font-extrabold tracking-wide uppercase transition-all cursor-pointer"
+                  className={cn(
+                    "w-full text-white py-[11px] rounded-xl text-[13px] font-medium tracking-wide uppercase transition-all cursor-pointer border-none flex items-center justify-center gap-1.5",
+                    isCorrect ? "bg-[#1D9E75]" : "bg-[#7F77DD]"
+                  )}
                 >
-                  {currentWordIndex < 4 ? "Next →" : "Continue"}
+                  <span>{currentWordIndex < 4 ? "Next" : "Continue"}</span>
+                  <i className="ti ti-arrow-right text-[13px]" />
                 </button>
               )}
             </div>
@@ -381,7 +372,7 @@ export default function LearnPage() {
 
       {/* STAGE 4: COMPLETE SCREEN */}
       {currentStage === "complete" && (
-        <div className="min-h-[70vh] flex flex-col justify-center items-center text-center space-y-8 max-w-sm mx-auto">
+        <div className="min-h-[65vh] flex flex-col justify-center items-center text-center space-y-8 max-w-sm mx-auto">
           {/* Animated checkmark */}
           <div className="flex justify-center">
             <svg className="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
@@ -390,47 +381,52 @@ export default function LearnPage() {
             </svg>
           </div>
 
-          {/* Heading */}
-          <div className="space-y-2 select-none">
-            <h1 className="text-2xl font-black text-zinc-900 dark:text-zinc-50">
-              {sessionScore >= 3 ? "Streak maintained! 🔥" : "Session Completed!"}
+          <div className="space-y-1.5 select-none">
+            {/* Streak maintained gets an IconBox above or in top header. Flame iconbox centered */}
+            {sessionScore >= 3 && (
+              <div className="flex justify-center mb-3">
+                <IconBox context="streak" size="md" />
+              </div>
+            )}
+            <h1 className="text-[15px] font-medium text-[#CECBF6]">
+              {sessionScore >= 3 ? "Streak maintained!" : "Session Completed!"}
             </h1>
-            <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+            <p className="text-[11px] text-[#AFA9EC]">
               You reviewed all 5 words of today's learning loop.
             </p>
           </div>
 
-          {/* Score Stats widget */}
-          <div className="grid grid-cols-2 gap-3 w-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-4 rounded-xl">
-            <div className="text-center border-r border-zinc-100 dark:border-zinc-800 py-2">
-              <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest block">
+          {/* Results grid (Secondary dark mode cards: bg #2D2550) */}
+          <div className="grid grid-cols-2 gap-3 w-full bg-[#2D2550] p-4 rounded-xl">
+            <div className="text-center border-r border-[#3C3489] py-2">
+              <span className="text-[10px] font-bold text-[#AFA9EC] uppercase tracking-widest block">
                 Score
               </span>
-              <span className="text-xl font-black text-zinc-900 dark:text-zinc-100 mt-1 block">
+              <span className="text-base font-black text-[#CECBF6] mt-1 block">
                 {sessionScore} / 5
               </span>
             </div>
             <div className="text-center py-2">
-              <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest block">
+              <span className="text-[10px] font-bold text-[#AFA9EC] uppercase tracking-widest block">
                 XP Earned
               </span>
-              <span className="text-xl font-black text-primary mt-1 block">
+              <span className="text-base font-black text-[#7F77DD] mt-1 block">
                 +{sessionScore * 10} XP
               </span>
             </div>
           </div>
 
-          {/* CTA Buttons */}
+          {/* CTAs */}
           <div className="w-full space-y-2">
             <button
               onClick={handleShare}
-              className="w-full bg-primary-light text-primary hover:bg-primary-light/85 py-4 rounded-lg text-sm font-extrabold uppercase tracking-wider transition-all cursor-pointer"
+              className="w-full bg-[#2D2550] hover:bg-[#2D2550]/80 text-[#CECBF6] py-[11px] rounded-xl text-[13px] font-medium uppercase tracking-wider transition-all cursor-pointer border-none"
             >
               Share score
             </button>
             <button
               onClick={() => router.push("/dashboard")}
-              className="w-full bg-zinc-900 dark:bg-zinc-100 hover:opacity-95 text-white dark:text-zinc-900 py-4 rounded-lg text-sm font-extrabold uppercase tracking-wider transition-all cursor-pointer"
+              className="w-full bg-[#7F77DD] hover:opacity-95 text-white py-[11px] rounded-xl text-[13px] font-medium uppercase tracking-wider transition-all cursor-pointer border-none"
             >
               Back to home
             </button>
@@ -443,37 +439,34 @@ export default function LearnPage() {
 
 function LearnSkeleton() {
   return (
-    <div className="space-y-6 animate-pulse select-none">
-      <div className="space-y-2">
-        <div className="flex justify-between">
-          <div className="h-4 w-20 bg-zinc-200 dark:bg-zinc-800 rounded-full" />
-          <div className="h-4 w-16 bg-zinc-200 dark:bg-zinc-800 rounded-full" />
-        </div>
-        <div className="h-2 w-full bg-zinc-200 dark:bg-zinc-800 rounded-full" />
+    <div className="space-y-6 animate-pulse select-none max-w-sm mx-auto">
+      <div className="flex items-center gap-3">
+        <div className="w-6 h-6 bg-zinc-800 rounded-full" />
+        <div className="h-2 flex-1 bg-zinc-800 rounded-full" />
       </div>
-      <div className="h-64 bg-zinc-200 dark:bg-zinc-800 rounded-xl" />
-      <div className="h-14 bg-zinc-200 dark:bg-zinc-800 rounded-xl" />
+      <div className="h-64 bg-zinc-800 rounded-xl" />
+      <div className="h-10 bg-zinc-800 rounded-xl" />
     </div>
   );
 }
 
 function LearnError() {
   return (
-    <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-8 rounded-xl text-center space-y-4 font-sans select-none">
-      <div className="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto">
-        <i className="ti ti-alert-triangle text-xl" />
+    <div className="bg-[#241E40] border border-[#3C3489] p-8 rounded-xl text-center space-y-4 font-sans select-none text-[#CECBF6]">
+      <div className="w-10 h-10 bg-red-950/20 text-[#D85A30] rounded-full flex items-center justify-center mx-auto">
+        <i className="ti ti-alert-triangle text-lg" />
       </div>
       <div className="space-y-1">
-        <h3 className="font-bold text-zinc-900 dark:text-zinc-50">
+        <h3 className="text-[12px] font-bold text-[#CECBF6]">
           Something went wrong.
         </h3>
-        <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+        <p className="text-[10px] text-[#AFA9EC]">
           We couldn't load your learning session. Try again.
         </p>
       </div>
       <button
         onClick={() => window.location.reload()}
-        className="px-6 py-2.5 bg-primary text-white text-xs font-bold rounded-lg uppercase tracking-wider"
+        className="px-5 py-2.5 bg-[#7F77DD] text-white text-[11px] font-bold rounded-lg uppercase tracking-wider border-none"
       >
         Try again
       </button>
@@ -484,21 +477,21 @@ function LearnError() {
 function LearnCompletedAlready() {
   const router = useRouter();
   return (
-    <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-8 rounded-xl text-center space-y-6 font-sans select-none max-w-sm mx-auto">
-      <div className="w-16 h-16 bg-success-light text-success rounded-full flex items-center justify-center mx-auto text-2xl font-black">
-        ✓
+    <div className="bg-[#241E40] border border-[#3C3489] p-8 rounded-xl text-center space-y-6 font-sans select-none max-w-sm mx-auto text-[#CECBF6]">
+      <div className="w-12 h-12 bg-emerald-950/20 text-[#1D9E75] rounded-full flex items-center justify-center mx-auto text-lg">
+        <i className="ti ti-circle-check" />
       </div>
-      <div className="space-y-2">
-        <h3 className="text-lg font-black text-zinc-900 dark:text-zinc-50">
+      <div className="space-y-1.5">
+        <h3 className="text-[15px] font-medium text-[#CECBF6]">
           Daily words complete!
         </h3>
-        <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+        <p className="text-[11px] text-[#AFA9EC] leading-relaxed">
           You've already reviewed all daily session words for today. Come back tomorrow!
         </p>
       </div>
       <button
         onClick={() => router.push("/dashboard")}
-        className="w-full py-4 bg-primary text-white text-sm font-extrabold rounded-lg uppercase tracking-wider"
+        className="w-full py-[11px] bg-[#7F77DD] text-white text-[13px] font-medium rounded-xl uppercase tracking-wider border-none cursor-pointer"
       >
         Back to home
       </button>

@@ -1,31 +1,33 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { IconBox, IconBoxContext } from "./icon-box";
 
 interface StatCardProps {
   value: string | number;
   label: string;
   icon?: string;
+  context?: IconBoxContext;
   className?: string;
 }
 
-export function StatCard({ value, label, icon, className }: StatCardProps) {
+export function StatCard({ value, label, icon, context, className }: StatCardProps) {
   return (
     <div
       className={cn(
-        "bg-primary-light/40 border border-primary-light p-4 rounded-xl flex flex-col justify-between select-none min-h-[100px]",
+        "bg-lexara-100 dark:bg-lexara-dark-elevated p-4 rounded-xl flex flex-col justify-between select-none min-h-[102px]",
         className
       )}
     >
       <div className="flex justify-between items-start">
-        <span className="text-zinc-500 dark:text-zinc-400 text-xs font-semibold uppercase tracking-wider">
+        <span className="text-[11px] font-bold text-lexara-600 dark:text-lexara-400 uppercase tracking-wider">
           {label}
         </span>
-        {icon && (
-          <i className={cn("ti text-primary text-lg leading-none", icon)} />
+        {context && (
+          <IconBox context={context} icon={icon} size="sm" />
         )}
       </div>
-      <div className="text-2xl font-black text-primary-dark dark:text-primary-light mt-2">
+      <div className="text-xl font-black text-lexara-900 dark:text-lexara-200 mt-2">
         {value}
       </div>
     </div>

@@ -54,6 +54,18 @@
   --color-success-light: #E1F5EE;
   --color-warning: #BA7517;
   --color-warning-light: #FAEEDA;
+
+  --color-lexara-50: #F4F3FF;
+  --color-lexara-100: #EEEDFE;
+  --color-lexara-200: #CECBF6;
+  --color-lexara-400: #AFA9EC;
+  --color-lexara-500: #7F77DD;
+  --color-lexara-600: #534AB7;
+  --color-lexara-800: #3C3489;
+  --color-lexara-900: #26215C;
+  --color-lexara-dark: #1A1730;
+  --color-lexara-dark-card: #241E40;
+  --color-lexara-dark-elevated: #2D2550;
 }
 
 :root {

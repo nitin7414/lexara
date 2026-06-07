@@ -1,16 +1,26 @@
-import { requireAuth } from "@/lib/auth";
-import { BottomNav, SidebarNav } from "@/components/bottom-nav";
+"use client";
 
-export default async function LearnerLayout({
+import { usePathname } from "next/navigation";
+import { BottomNav, SidebarNav } from "@/components/bottom-nav";
+import { cn } from "@/lib/utils";
+
+export default function LearnerLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // Enforce authentication for all sub-routes under (learner)
-  await requireAuth();
+  const pathname = usePathname();
+  const isDarkTheme = pathname.startsWith("/learn");
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 flex flex-col md:flex-row text-zinc-900 dark:text-zinc-50 antialiased font-sans">
+    <div
+      className={cn(
+        "min-h-screen flex flex-col md:flex-row antialiased font-sans transition-colors duration-300",
+        isDarkTheme
+          ? "bg-[#1A1730] text-[#CECBF6]"
+          : "bg-[#F4F3FF] text-lexara-900"
+      )}
+    >
       {/* Desktop Sidebar navigation */}
       <SidebarNav />
 
