@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { BottomNav, SidebarNav } from "@/components/bottom-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Avatar } from "@/components/avatar";
+import { cn } from "@/lib/utils";
 
 export default function LearnerLayout({
   children,
