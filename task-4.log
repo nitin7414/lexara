@@ -1,0 +1,76 @@
+
+
+    Directory: C:\Users\pc\Desktop\lexara\.next\dev\server\chunks
+
+
+Mode                 LastWriteTime         Length Name                                                                 
+----                 -------------         ------ ----                                                                 
+-a----          6/8/2026   1:21 PM            284 _next-internal_server_app_api_user_avatar_route_actions_1i1mh4p.js   
+-a----          6/8/2026   1:21 PM            154 _next-internal_server_app_api_user_avatar_route_actions_1i1mh4p.js.ma
+                                                  p                                                                    
+
+
+    Directory: C:\Users\pc\Desktop\lexara\.next\dev\server\chunks\ssr
+
+
+Mode                 LastWriteTime         Length Name                                                                 
+----                 -------------         ------ ----                                                                 
+-a----          6/8/2026   1:21 PM          69501 app_(learner)_profile_avatar_page_tsx_1w35pqz._.js                   
+-a----          6/8/2026   1:21 PM          27887 app_(learner)_profile_avatar_page_tsx_1w35pqz._.js.map               
+
+
+    Directory: C:\Users\pc\Desktop\lexara\.next\dev\static\chunks
+
+
+Mode                 LastWriteTime         Length Name                                                                 
+----                 -------------         ------ ----                                                                 
+-a----          6/8/2026   1:21 PM          67176 app_(learner)_profile_avatar_page_tsx_1vybfay._.js                   
+-a----          6/8/2026   1:21 PM          27940 app_(learner)_profile_avatar_page_tsx_1vybfay._.js.map               
+-a----          6/8/2026  10:55 AM            278 app_(learner)_profile_avatar_page_tsx_20jwi2l._.js                   
+
+
+    Directory: C:\Users\pc\Desktop\lexara\.next\server\app\profile
+
+
+Mode                 LastWriteTime         Length Name                                                                 
+----                 -------------         ------ ----                                                                 
+-a----          6/8/2026   1:33 PM          21055 avatar.html                                                          
+-a----          6/8/2026   1:33 PM            492 avatar.meta                                                          
+-a----          6/8/2026   1:33 PM          10824 avatar.rsc                                                           
+
+
+    Directory: C:\Users\pc\Desktop\lexara\.next\server\app\profile\avatar.segments\!KGxlYXJuZXIp\profile
+
+
+Mode                 LastWriteTime         Length Name                                                                 
+----                 -------------         ------ ----                                                                 
+-a----          6/8/2026   1:33 PM            525 avatar.segment.rsc                                                   
+
+
+    Directory: C:\Users\pc\Desktop\lexara\.next\server\chunks
+
+
+Mode                 LastWriteTime         Length Name                                                                 
+----                 -------------         ------ ----                                                                 
+-a----          6/8/2026   1:32 PM            128 _next-internal_server_app_api_user_avatar_route_actions_1i1mh4p.js   
+-a----          6/8/2026   1:32 PM             51 _next-internal_server_app_api_user_avatar_route_actions_1i1mh4p.js.ma
+                                                  p                                                                    
+
+
+    Directory: C:\Users\pc\Desktop\lexara\.next\server\chunks\ssr
+
+
+Mode                 LastWriteTime         Length Name                                                                 
+----                 -------------         ------ ----                                                                 
+-a----          6/8/2026   1:32 PM          12402 app_(learner)_profile_avatar_page_tsx_1w35pqz._.js                   
+-a----          6/8/2026   1:32 PM          28819 app_(learner)_profile_avatar_page_tsx_1w35pqz._.js.map               
+
+
+    Directory: C:\Users\pc\Desktop\lexara\components
+
+
+Mode                 LastWriteTime         Length Name                                                                 
+----                 -------------         ------ ----                                                                 
+-a----          6/8/2026  11:49 AM           2304 avatar.tsx                                                           
+
+

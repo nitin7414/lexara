@@ -55,7 +55,7 @@ export const proxy = clerkMiddleware(async (auth, request) => {
     return;
   }
 
-  // If user has no org → only allow /dashboard, /learn, /streak, /leaderboard, /profile, /friends, /onboarding
+  // If user has no org → only allow /dashboard, /learn, /streak, /leaderboard, /profile, /friends, /onboarding, /battle
   if (!orgId || !orgRole) {
     const allowedPaths = [
       "/dashboard",
@@ -65,6 +65,7 @@ export const proxy = clerkMiddleware(async (auth, request) => {
       "/profile",
       "/friends",
       "/onboarding",
+      "/battle",
       "/api"
     ];
 

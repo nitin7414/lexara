@@ -25,21 +25,85 @@ export async function GET() {
     const longestStreak = user.streak?.longestStreak || 0;
     const totalDays = user.streak?.totalDaysCompleted || 0;
 
-    // 2. Total words learned
+    // 2. Total words learned (excluding battle-session)
     const totalWords = await prisma.userProgress.count({
       where: {
         userId: user.id,
         stage: "TESTED",
+        NOT: {
+          wordId: "battle-session",
+        },
       },
     });
 
-    // 3. Accuracy %
+    // 2b. Battle Wins & Losses
+    const battleWins = await prisma.userProgress.count({
+      where: {
+        userId: user.id,
+        wordId: "battle-session",
+        correct: true,
+      },
+    });
+
+    const battleLosses = await prisma.userProgress.count({
+      where: {
+        userId: user.id,
+        wordId: "battle-session",
+        correct: false,
+      },
+    });
+
+    // 3. Accuracy % (excluding battle-session)
     const progressRecords = await prisma.userProgress.findMany({
-      where: { userId: user.id },
+      where: {
+        userId: user.id,
+        NOT: {
+          wordId: "battle-session",
+        },
+      },
     });
     const totalAttempts = progressRecords.reduce((sum, p) => sum + p.attempts, 0);
     const totalCorrect = progressRecords.filter((p) => p.correct).length;
     const accuracy = totalAttempts > 0 ? Math.round((totalCorrect / totalAttempts) * 100) : 100;
+
+    // 3b. Total XP
+    const totalXP = totalCorrect * 10 + battleWins * 50 + battleLosses * 10;
+
+    // 3c. Global/Friend Rank
+    const friendships = await prisma.friendship.findMany({
+      where: {
+        OR: [
+          { userId: user.id },
+          { friendId: user.id },
+        ],
+      },
+    });
+    const friendIds = friendships.map((f) =>
+      f.userId === user.id ? f.friendId : f.userId
+    );
+    const candidateIds = [user.id, ...friendIds];
+
+    const startOfWeek = new Date();
+    startOfWeek.setDate(startOfWeek.getDate() - 7);
+
+    const xpData = await Promise.all(
+      candidateIds.map(async (id) => {
+        const correctCount = await prisma.userProgress.count({
+          where: {
+            userId: id,
+            correct: true,
+            completedAt: {
+              gte: startOfWeek,
+            },
+          },
+        });
+        return { id, xp: correctCount * 10 };
+      })
+    );
+
+    xpData.sort((a, b) => b.xp - a.xp);
+    const userRankIndex = xpData.findIndex((x) => x.id === user.id);
+    const rank = userRankIndex !== -1 ? userRankIndex + 1 : 1;
 
     // 4. Last 14 Days History (boolean array for the calendar grid)
     // Index 0 is 13 days ago, Index 13 is today
@@ -79,6 +143,9 @@ export async function GET() {
       totalWords,
       accuracy,
       last14Days,
+      battleWins,
+      totalXP,
+      rank,
     });
   } catch (error) {
     console.error("Error in GET /api/streak:", error);

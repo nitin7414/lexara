@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { BottomNav, SidebarNav } from "@/components/bottom-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -13,7 +13,10 @@ export default function LearnerLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const isForcedDark = pathname.startsWith("/learn") || pathname.startsWith("/battle");
+  const isForcedDark = pathname.startsWith("/learn") || pathname.startsWith("/battle") || pathname.startsWith("/profile") || pathname.startsWith("/streak");
+
+  const [userAvatar, setUserAvatar] = useState<string | null>(null);
+  const [userName, setUserName] = useState<string>("Learner");
 
   useEffect(() => {
     if (isForcedDark) {
@@ -31,6 +34,22 @@ export default function LearnerLayout({
     }
   }, [pathname, isForcedDark]);
 
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const res = await fetch("/api/streak");
+        if (res.ok) {
+          const data = await res.json();
+          setUserAvatar(data.imageUrl);
+          setUserName(data.name || "Learner");
+        }
+      } catch (err) {
+        console.error("Layout avatar fetch error:", err);
+      }
+    }
+    fetchUser();
+  }, [pathname]);
+
   return (
     <div className="min-h-screen flex flex-col md:flex-row antialiased font-sans bg-background text-foreground transition-colors duration-300">
       {/* Desktop Sidebar navigation */}
@@ -43,13 +62,13 @@ export default function LearnerLayout({
           <span className="text-xl font-black text-primary leading-none tracking-tight">Lexara</span>
           <div className="flex items-center gap-3">
             <ThemeToggle />
-            <Avatar name="Learner" size="sm" />
+            <Avatar name={userName} imageUrl={userAvatar} size="sm" />
           </div>
         </header>
 
         <main className={cn(
           "flex-1 w-full mx-auto px-4 py-8 pb-24 md:pb-12",
-          pathname === "/dashboard"
+          (pathname === "/dashboard" || pathname === "/streak" || pathname === "/profile/avatar" || pathname.startsWith("/profile/avatar"))
             ? "max-w-[1280px]"
             : "max-w-md md:max-w-2xl lg:max-w-3xl"
         )}>

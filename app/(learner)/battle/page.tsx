@@ -48,7 +48,7 @@ export default function BattleLobbyPage() {
         name: "Amara Vance",
         title: "Greek Roots Specialist",
         level: 45,
-        imageUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuCq7LRlp4YpxAl-W_hFyqPKe-AiPeuiqNNjkZZVZ0R6Dz5bI_46bHHk3OYrw3tU5OhnezNISMG6BPLX7UhJEDTLjMqc1kLV79NW2Cl_ErM4pGvupfocrQ-SyhbbfIRSSC4QDxpvpgPWlnr9SlnC_w8GIJxy_ssEltSizgo3nqPo7RAtiQiMQtcVgkjaJHqOtdEPHwH8m3ExqMA36sndY7fYzTM0CBFVggSiPX8VMVuQJ4yjaKQM9J4KvJx1j_Z6ei70isZoaWyg2uM"
+        imageUrl: "/avatars/amara_vance.png"
       });
       setCountdown(3);
     }, 6000);
@@ -215,7 +215,7 @@ export default function BattleLobbyPage() {
             {/* Friend Challenge Card 1 */}
             <div className="neo-raised p-3.5 rounded-2xl flex items-center justify-between border border-white/5 hover:border-primary/20 transition-all group">
               <div className="flex items-center gap-3">
-                <Avatar name="Sarah Connor" imageUrl="https://lh3.googleusercontent.com/aida-public/AB6AXuAYjbppMwpuHCl0amlkZmvp1MWXpio_dohqDfrRYACDacIJbzSDpFGSJvk2Cfl15wI3QTSXWFITdiwV52naa1RqISb63B9UrBvbyVtSAPCC-qDVlOXQx2Ym2fTrQ2qLxKTlDR0rueBFpY_4RHvkK8dMhIIsYn1X3wWszBdFkPcDP_gev79a7DqNl97pMW6js7q05ogaDcMyixYCGCtDhR6VPtvdyvaIu75q3_7oNfj_Cc5rQ8CoFwzDG0c5F-5HPRnxdH0V7cTbHPk" size="sm" />
+                <Avatar name="Sarah Connor" imageUrl="/avatars/sarah_connor.png" size="sm" />
                 <div>
                   <h4 className="font-bold text-xs text-on-surface">Sarah Connor</h4>
                   <p className="text-[9px] text-on-surface-variant">Challenged you to 'Greek Roots'</p>
@@ -229,7 +229,7 @@ export default function BattleLobbyPage() {
             {/* Friend Challenge Card 2 */}
             <div className="neo-raised p-3.5 rounded-2xl flex items-center justify-between border border-white/5 hover:border-primary/20 transition-all group">
               <div className="flex items-center gap-3">
-                <Avatar name="Marcus Aurelius" imageUrl="https://lh3.googleusercontent.com/aida-public/AB6AXuBKqxWGFXcxsJLdofbjK9TSA58CrxlQdhLIR4uWuM3_Y_8OsYjOnk3wH3CryTXuaFNc18SqRow5d5tGS6G74Dhn5wnc39FtJrsmqh0CTNlcXjymzMooyeGPRJ63n-8hi6LRXcd8HamqkosKGoHmxebOwx7RS7KmQa3bOi0sM3JYLqt6NtHPjdbW_BwZrXFR8woMrz1Jmzn0X5lAV77SGzgMvsNLEw8Jyx9zqNNQ5o0Uela-D8zx2blU1YZ2gbsFjB13o06QMfIsQl4" size="sm" />
+                <Avatar name="Marcus Aurelius" imageUrl="/avatars/marcus_aurelius.png" size="sm" />
                 <div>
                   <h4 className="font-bold text-xs text-on-surface">Marcus Aurelius</h4>
                   <p className="text-[9px] text-on-surface-variant">Waiting for your move...</p>

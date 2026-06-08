@@ -27,6 +27,39 @@ export function Avatar({ name, imageUrl, size = "md", className }: AvatarProps) 
   };
 
   if (imageUrl) {
+    const isSprite = imageUrl.includes("#sprite");
+    if (isSprite) {
+      const hash = imageUrl.split("#")[1];
+      const parts = hash?.split("-");
+      if (parts && parts[0] === "sprite") {
+        const col = parseInt(parts[1]) || 0;
+        const row = parseInt(parts[2]) || 0;
+
+        return (
+          <div
+            className={cn(
+              "rounded-full overflow-hidden border border-outline-variant/30 dark:border-outline-variant/50 shadow-xs relative flex items-center justify-center bg-surface-container-high",
+              sizeClasses[size],
+              className
+            )}
+          >
+            <img
+              src={imageUrl.split("#")[0]}
+              alt={name || "User avatar"}
+              className="max-w-none absolute"
+              style={{
+                width: "600%",
+                height: "500%",
+                left: 0,
+                top: 0,
+                objectPosition: `${col * 20}% ${row * 25}%`,
+              }}
+            />
+          </div>
+        );
+      }
+    }
+
     return (
       <img
         src={imageUrl}

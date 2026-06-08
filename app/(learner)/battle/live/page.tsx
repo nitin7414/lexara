@@ -311,7 +311,7 @@ export default function WordBattleLivePage() {
           <div className="relative">
             <div className="w-14 h-14 rounded-full neomorph-raised p-0.5 border border-outline-variant/20">
               <img
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCq7LRlp4YpxAl-W_hFyqPKe-AiPeuiqNNjkZZVZ0R6Dz5bI_46bHHk3OYrw3tU5OhnezNISMG6BPLX7UhJEDTLjMqc1kLV79NW2Cl_ErM4pGvupfocrQ-SyhbbfIRSSC4QDxpvpgPWlnr9SlnC_w8GIJxy_ssEltSizgo3nqPo7RAtiQiMQtcVgkjaJHqOtdEPHwH8m3ExqMA36sndY7fYzTM0CBFVggSiPX8VMVuQJ4yjaKQM9J4KvJx1j_Z6ei70isZoaWyg2uM"
+                src="/avatars/amara_vance.png"
                 alt="Amara Vance"
                 className="w-full h-full rounded-full object-cover"
               />
