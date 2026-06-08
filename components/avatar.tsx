@@ -19,18 +19,6 @@ export function Avatar({ name, imageUrl, size = "md", className }: AvatarProps) 
         .toUpperCase()
     : "LX";
 
-  // Generate a premium pastel HSL background color deterministically from name
-  const getBackgroundColor = (str: string) => {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const h = Math.abs(hash) % 360;
-    return `hsl(${h}, 65%, 60%)`; // Premium balanced pastel shade
-  };
-
-  const bgColor = name ? getBackgroundColor(name) : "#7F77DD";
-
   const sizeClasses = {
     sm: "w-8 h-8 text-xs",
     md: "w-10 h-10 text-sm",
@@ -44,7 +32,7 @@ export function Avatar({ name, imageUrl, size = "md", className }: AvatarProps) 
         src={imageUrl}
         alt={name || "User avatar"}
         className={cn(
-          "rounded-full object-cover border-2 border-white",
+          "rounded-full object-cover border border-outline-variant/30 dark:border-outline-variant/50 shadow-xs",
           sizeClasses[size],
           className
         )}
@@ -54,9 +42,8 @@ export function Avatar({ name, imageUrl, size = "md", className }: AvatarProps) 
 
   return (
     <div
-      style={{ backgroundColor: bgColor }}
       className={cn(
-        "rounded-full flex items-center justify-center text-white border-2 border-white font-medium select-none shadow-none",
+        "rounded-full flex items-center justify-center font-semibold select-none border border-outline-variant/30 dark:border-outline-variant/50 bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-fixed-dim shadow-none",
         sizeClasses[size],
         className
       )}

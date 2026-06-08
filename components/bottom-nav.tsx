@@ -3,27 +3,23 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "./theme-toggle";
 
 const NAV_ITEMS = [
   { label: "Home", href: "/dashboard", icon: "ti-home" },
   { label: "Streak", href: "/streak", icon: "ti-flame" },
   { label: "Learn", href: "/learn", icon: "ti-book-2" },
+  { label: "Battle", href: "/battle", icon: "ti-swords" },
   { label: "Leaderboard", href: "/leaderboard", icon: "ti-trophy" },
   { label: "Profile", href: "/profile", icon: "ti-user" },
 ];
 
 export function BottomNav() {
   const pathname = usePathname();
-  const isDarkTheme = pathname.startsWith("/learn");
 
   return (
     <div
-      className={cn(
-        "fixed bottom-0 left-0 right-0 z-50 h-16 md:hidden flex items-center justify-around px-4 pb-safe transition-colors duration-300 select-none",
-        isDarkTheme
-          ? "bg-[#1A1730] border-t border-[#3C3489]"
-          : "bg-white border-t border-[#E8E6FF]"
-      )}
+      className="fixed bottom-0 left-0 right-0 z-50 h-16 md:hidden flex items-center justify-around px-2 pb-safe bg-background border-t border-border select-none"
     >
       {NAV_ITEMS.map((item) => {
         const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
@@ -31,17 +27,17 @@ export function BottomNav() {
           <Link
             key={item.href}
             href={item.href}
-            className="flex flex-col items-center justify-center w-12 h-full relative group transition-colors cursor-pointer"
+            className="flex flex-col items-center justify-center w-10 h-full relative group transition-colors cursor-pointer"
           >
             <i
               className={cn(
-                "ti text-lg transition-all duration-250",
+                "ti text-lg transition-all duration-200",
                 item.icon,
-                isActive ? "text-[#7F77DD] scale-110" : "text-[#AFA9EC]"
+                isActive ? "text-primary scale-110" : "text-on-surface-variant/70"
               )}
             />
             {isActive && (
-              <span className="absolute bottom-1.5 w-1 h-1 bg-[#7F77DD] rounded-[2px]" />
+              <span className="absolute bottom-1.5 w-1 h-1 bg-primary rounded-[2px]" />
             )}
           </Link>
         );
@@ -52,28 +48,20 @@ export function BottomNav() {
 
 export function SidebarNav() {
   const pathname = usePathname();
-  const isDarkTheme = pathname.startsWith("/learn");
 
   return (
     <aside
-      className={cn(
-        "hidden md:flex flex-col w-64 fixed top-0 bottom-0 left-0 p-6 z-40 select-none border-r transition-colors duration-300",
-        isDarkTheme
-          ? "bg-[#1A1730] border-[#3C3489]"
-          : "bg-white border-[#E8E6FF]"
-      )}
+      className="hidden md:flex flex-col w-64 fixed top-0 bottom-0 left-0 p-6 z-40 select-none border-r border-border bg-surface"
     >
       {/* Brand Logo */}
-      <div className="mb-10 px-2">
+      <div className="flex items-center justify-between mb-10 px-2">
         <Link
           href="/dashboard"
-          className={cn(
-            "text-2xl font-black transition-colors leading-none tracking-tight",
-            isDarkTheme ? "text-[#CECBF6]" : "text-[#7F77DD]"
-          )}
+          className="text-2xl font-black transition-colors leading-none tracking-tight text-primary"
         >
           Lexara
         </Link>
+        <ThemeToggle />
       </div>
 
       {/* Nav List */}
@@ -85,14 +73,10 @@ export function SidebarNav() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-4 px-4 py-3 rounded-lg text-[13px] font-medium transition-all duration-200 cursor-pointer border-none",
+                "flex items-center gap-4 px-4 py-3 rounded-lg text-[13px] font-semibold transition-all duration-200 cursor-pointer border-none",
                 isActive
-                  ? isDarkTheme
-                    ? "bg-[#2D2550] text-[#CECBF6]"
-                    : "bg-[#EEEDFE] text-[#7F77DD] border-l-4 border-[#7F77DD] pl-3"
-                  : isDarkTheme
-                  ? "text-[#AFA9EC] hover:bg-[#241E40] hover:text-white"
-                  : "text-lexara-800 hover:bg-[#F4F3FF] hover:text-[#7F77DD]"
+                  ? "bg-primary-container text-on-primary-container"
+                  : "text-on-surface-variant hover:bg-surface-container-low hover:text-primary"
               )}
             >
               <i className={cn("ti text-base", item.icon)} />
@@ -103,12 +87,7 @@ export function SidebarNav() {
       </nav>
 
       {/* Footer Info */}
-      <div
-        className={cn(
-          "text-[9px] font-semibold uppercase tracking-wider px-4",
-          isDarkTheme ? "text-zinc-600" : "text-zinc-400"
-        )}
-      >
+      <div className="text-[9px] font-semibold uppercase tracking-wider px-4 text-on-surface-variant/50">
         © 2026 Lexara
       </div>
     </aside>

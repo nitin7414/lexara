@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lexara | Word Battle Lobby</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0b0e19; /* background from config */
+            color: #e1e4ff; /* on-surface */
+            overflow-x: hidden;
+        }
+
+        /* Neomorphic Raised */
+        .neo-raised {
+            background: #14192a; /* surface-container */
+            box-shadow: 
+                -4px -4px 10px rgba(255, 255, 255, 0.03),
+                8px 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Neomorphic Inset */
+        .neo-inset {
+            background: #14192a;
+            box-shadow: 
+                inset -4px -4px 10px rgba(255, 255, 255, 0.03),
+                inset 8px 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Pulsing Glow for Matchmaking */
+        @keyframes pulse-glow {
+            0%, 100% { transform: scale(1); opacity: 0.5; filter: blur(10px); }
+            50% { transform: scale(1.1); opacity: 0.8; filter: blur(15px); }
+        }
+        .matchmaking-glow {
+            background: radial-gradient(circle, #7073ff 0%, transparent 70%);
+            animation: pulse-glow 3s infinite ease-in-out;
+        }
+
+        .vs-gradient {
+            background: linear-gradient(135deg, #7073ff 0%, #af88ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed": "#000000",
+                        "on-tertiary": "#2b0065",
+                        "tertiary-container": "#8342f4",
+                        "surface-tint": "#c0c1ff",
+                        "tertiary-fixed-dim": "#7632e7",
+                        "surface-variant": "#1f243c",
+                        "error-dim": "#c44b5f",
+                        "primary-fixed": "#7073ff",
+                        "on-secondary-fixed": "#3c3f4d",
+                        "tertiary-fixed": "#8342f4",
+                        "outline-variant": "#414760",
+                        "surface-container-high": "#1a1f32",
+                        "primary-container": "#3c3dca",
+                        "on-secondary-fixed-variant": "#585b6a",
+                        "on-error-container": "#ff97a3",
+                        "error": "#f97386",
+                        "tertiary": "#af88ff",
+                        "inverse-on-surface": "#525462",
+                        "secondary-container": "#383b49",
+                        "tertiary-dim": "#8a4cfc",
+                        "inverse-primary": "#494bd7",
+                        "surface-bright": "#252b43",
+                        "on-surface-variant": "#a5aac7",
+                        "on-primary-container": "#e2e0ff",
+                        "primary-fixed-dim": "#6366f1",
+                        "secondary-fixed-dim": "#d2d3e5",
+                        "secondary": "#c4c5d7",
+                        "on-background": "#e1e4ff",
+                        "surface-container-low": "#0f1322",
+                        "surface-container-lowest": "#000000",
+                        "on-tertiary-fixed": "#ffffff",
+                        "on-error": "#490013",
+                        "surface-container": "#14192a",
+                        "error-container": "#871c34",
+                        "primary-dim": "#6063ee",
+                        "on-secondary": "#3d3f4e",
+                        "on-primary": "#2724b8",
+                        "on-secondary-container": "#bdbed0",
+                        "on-primary-fixed-variant": "#010028",
+                        "secondary-dim": "#b6b8c9",
+                        "inverse-surface": "#fbf8ff",
+                        "background": "#0b0e19",
+                        "secondary-fixed": "#e0e1f4",
+                        "on-tertiary-fixed-variant": "#e5d5ff",
+                        "on-surface": "#e1e4ff",
+                        "surface": "#0b0e19",
+                        "primary": "#c0c1ff",
+                        "surface-container-highest": "#1f243c",
+                        "surface-dim": "#0b0e19",
+                        "outline": "#6f7490",
+                        "on-tertiary-container": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background min-h-screen pb-24">
+<!-- Top Navigation -->
+<header class="w-full top-0 sticky z-40 bg-background/80 backdrop-blur-md">
+<div class="flex justify-between items-center w-full px-6 h-16 max-w-7xl mx-auto">
+<div class="font-display-lg text-2xl font-extrabold text-primary tracking-tight">Lexara</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-primary font-bold border-b-2 border-primary py-1 px-2 transition-colors" href="#">Learn</a>
+<a class="text-on-surface-variant font-medium hover:bg-surface-container-low transition-colors py-1 px-4 rounded-lg" href="#">Practice</a>
+<a class="text-on-surface-variant font-medium hover:bg-surface-container-low transition-colors py-1 px-4 rounded-lg" href="#">Social</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary-fixed hover:scale-110 transition-transform" data-icon="local_fire_department">local_fire_department</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:scale-110 transition-transform" data-icon="notifications">notifications</button>
+<div class="w-10 h-10 rounded-full border-2 border-outline-variant overflow-hidden">
+<img alt="User profile avatar" data-alt="A professional 3D stylized avatar of a young male with modern glasses and a slight smile, rendered in a high-fidelity digital art style. The character is set against a deep indigo background that complements the dark mode UI of a premium education platform. Soft studio lighting highlights the contours of the face and the texture of a navy blue hoodie." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjpZOEKNLiGCYOegmPlBqWTt64HzJPHvBXCHrSp0V2UqBcGZJshg7-ygoxVgIDEejjRbmnVGMYSIh68BH-H7rzwyalvZcMgJbbmldZuDkVpgRxpaIXFtySpN8ouoyUwDRqvTL-Q-s6vDydy1jhM-R8f5_IwZid4rhrjpMl5vQq22VCQ42J29SL3xIWadSQnP8qIIWDVsTAT8e7Ds7mgcGJIqEVl2Hn2On2AoKomYrNf_Q7f49LcLlGQh6hrX9dCMbxgIk-FYLjrag"/>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-6 py-8 flex flex-col gap-12">
+<!-- Matchmaking Section -->
+<section class="relative w-full py-12 flex flex-col items-center justify-center">
+<div class="absolute inset-0 matchmaking-glow -z-10 w-[500px] h-[300px] mx-auto opacity-20"></div>
+<div class="flex flex-col md:flex-row items-center justify-center gap-16 w-full max-w-4xl">
+<!-- Current User -->
+<div class="flex flex-col items-center gap-4">
+<div class="w-32 h-32 md:w-44 md:h-44 rounded-2xl neo-raised p-1 flex items-center justify-center relative">
+<div class="w-full h-full rounded-xl overflow-hidden bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="A detailed digital avatar of a young man with a focused expression, wearing a high-tech headset, set against a background of glowing circuitry patterns. The visual style is crisp and clean, utilizing a palette of deep obsidian and neon lavender to match a sophisticated competitive gaming environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzBrwYUZINlRr51Uzft1kDRA2G8scF8v3lOcOTja5zvwV3yxsUVhIu2uzTvvvW0YSYk30oLZnnVTcqjbVg5_L5h2EoD-dDMDpnvv2fVTDHNE0_IyVHNRMA5aHEywA3UJGBSbgR3Gq7zMxWHRKX9UznL1FKgEiuYLzC1thfwrJ4Z8fM6KbqLjv2cotK8m0pG_l3sRJN_COz1X5AyVRY4rxjcCaQu2TlbUoJ8zpQp9y8k0iYdT-OuhiDUnhD74vlPB1we6VKnvZqjxM"/>
+</div>
+<div class="absolute -bottom-2 -right-2 bg-primary text-on-primary-fixed px-3 py-1 rounded-full text-xs font-bold shadow-lg">LVL 42</div>
+</div>
+<div class="text-center">
+<h3 class="text-xl font-bold text-on-surface">Alex Mercer</h3>
+<p class="text-sm text-on-surface-variant">Master of Verbose</p>
+</div>
+</div>
+<!-- VS Center -->
+<div class="relative flex flex-col items-center">
+<div class="text-5xl md:text-7xl font-extrabold vs-gradient italic tracking-tighter">VS</div>
+<div class="mt-4 flex flex-col items-center gap-2">
+<div class="flex gap-1">
+<div class="w-2 h-2 rounded-full bg-primary animate-bounce" style="animation-delay: 0.1s"></div>
+<div class="w-2 h-2 rounded-full bg-primary animate-bounce" style="animation-delay: 0.2s"></div>
+<div class="w-2 h-2 rounded-full bg-primary animate-bounce" style="animation-delay: 0.3s"></div>
+</div>
+<span class="text-sm font-semibold text-primary tracking-widest uppercase">Searching</span>
+</div>
+</div>
+<!-- Opponent Placeholder -->
+<div class="flex flex-col items-center gap-4 opacity-70">
+<div class="w-32 h-32 md:w-44 md:h-44 rounded-2xl neo-inset flex items-center justify-center group">
+<div class="material-symbols-outlined text-6xl text-outline-variant animate-pulse" data-icon="person_search">person_search</div>
+</div>
+<div class="text-center">
+<h3 class="text-xl font-bold text-on-surface-variant">Finding Opponent...</h3>
+<p class="text-sm text-outline">Avg. Wait: 0:12s</p>
+</div>
+</div>
+</div>
+<div class="mt-12">
+<button class="neo-raised px-10 py-4 rounded-xl bg-primary-container text-on-primary-container font-bold text-lg active:translate-y-1 transition-all flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="cancel">cancel</span>
+                    Cancel Matchmaking
+                </button>
+</div>
+</section>
+<!-- Challenges Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+<!-- Active Challenges -->
+<div class="flex flex-col gap-6">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg neo-raised flex items-center justify-center text-primary-fixed">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+</div>
+<h2 class="text-xl font-bold">Active Challenges</h2>
+</div>
+<span class="text-sm text-primary font-semibold hover:underline cursor-pointer">View All</span>
+</div>
+<div class="flex flex-col gap-4">
+<!-- Friend Challenge Card -->
+<div class="neo-raised p-4 rounded-2xl flex items-center justify-between border border-white/5 hover:border-primary/20 transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest overflow-hidden">
+<img alt="Friend avatar" data-alt="A detailed digital avatar of a young woman with pink streaks in her hair, wearing a sleek silver tactical suit. She has a confident, competitive smirk. The background features soft purple bokeh lighting, creating a high-end, futuristic social vibe for a gaming dashboard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYjbppMwpuHCl0amlkZmvp1MWXpio_dohqDfrRYACDacIJbzSDpFGSJvk2Cfl15wI3QTSXWFITdiwV52naa1RqISb63B9UrBvbyVtSAPCC-qDVlOXQx2Ym2fTrQ2qLxKTlDR0rueBFpY_4RHvkK8dMhIIsYn1X3wWszBdFkPcDP_gev79a7DqNl97pMW6js7q05ogaDcMyixYCGCtDhR6VPtvdyvaIu75q3_7oNfj_Cc5rQ8CoFwzDG0c5F-5HPRnxdH0V7cTbHPk"/>
+</div>
+<div>
+<h4 class="font-bold text-on-surface">Sarah Connor</h4>
+<p class="text-xs text-on-surface-variant">Challenged you to 'Greek Roots'</p>
+</div>
+</div>
+<button class="neo-raised px-4 py-2 rounded-lg bg-tertiary-container text-white text-sm font-bold active:scale-95 transition-transform">Accept</button>
+</div>
+<!-- Friend Challenge Card -->
+<div class="neo-raised p-4 rounded-2xl flex items-center justify-between border border-white/5 hover:border-primary/20 transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest overflow-hidden">
+<img alt="Friend avatar" data-alt="A portrait-style digital avatar of a man with a beard and a yellow beanie, smiling warmly. He is wearing a grey sweatshirt, and the lighting is soft and golden-hour inspired. The overall aesthetic is calm, friendly, and fits into a premium social networking interface for education." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKqxWGFXcxsJLdofbjK9TSA58CrxlQdhLIR4uWuM3_Y_8OsYjOnk3wH3CryTXuaFNc18SqRow5d5tGS6G74Dhn5wnc39FtJrsmqh0CTNlcXjymzMooyeGPRJ63n-8hi6LRXcd8HamqkosKGoHmxebOwx7RS7KmQa3bOi0sM3JYLqt6NtHPjdbW_BwZrXFR8woMrz1Jmzn0X5lAV77SGzgMvsNLEw8Jyx9zqNNQ5o0Uela-D8zx2blU1YZ2gbsFjB13o06QMfIsQl4"/>
+</div>
+<div>
+<h4 class="font-bold text-on-surface">Marcus Aurelius</h4>
+<p class="text-xs text-on-surface-variant">Waiting for your move...</p>
+</div>
+</div>
+<button class="neo-raised px-4 py-2 rounded-lg bg-surface-container-highest text-on-surface-variant text-sm font-bold active:scale-95 transition-transform">Resume</button>
+</div>
+</div>
+</div>
+<!-- Global Battles Queue -->
+<div class="flex flex-col gap-6">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg neo-raised flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined" data-icon="public">public</span>
+</div>
+<h2 class="text-xl font-bold">Global Battles</h2>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-error animate-pulse"></div>
+<span class="text-xs text-on-surface-variant uppercase tracking-widest font-bold">1,240 Online</span>
+</div>
+</div>
+<div class="neo-inset p-2 rounded-2xl flex flex-col gap-1">
+<!-- Queue Item -->
+<div class="flex items-center justify-between p-3 rounded-xl hover:bg-surface-container-highest transition-colors">
+<div class="flex items-center gap-4">
+<span class="text-lg font-black text-outline/30 italic">01</span>
+<div class="flex flex-col">
+<span class="text-sm font-bold">Hyper_Linguist</span>
+<span class="text-[10px] text-on-surface-variant">Win Streak: 12</span>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="text-right">
+<div class="text-xs font-bold text-primary">Master</div>
+<div class="text-[10px] text-outline">Rating: 2,450</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant" data-icon="bolt">bolt</span>
+</div>
+</div>
+<!-- Divider -->
+<div class="h-[1px] bg-outline-variant/10 mx-4"></div>
+<!-- Queue Item -->
+<div class="flex items-center justify-between p-3 rounded-xl hover:bg-surface-container-highest transition-colors">
+<div class="flex items-center gap-4">
+<span class="text-lg font-black text-outline/30 italic">02</span>
+<div class="flex flex-col">
+<span class="text-sm font-bold">WordSmith_99</span>
+<span class="text-[10px] text-on-surface-variant">Win Streak: 3</span>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="text-right">
+<div class="text-xs font-bold text-tertiary">Diamond</div>
+<div class="text-[10px] text-outline">Rating: 1,820</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant" data-icon="bolt">bolt</span>
+</div>
+</div>
+<!-- Queue Item -->
+<div class="flex items-center justify-between p-3 rounded-xl hover:bg-surface-container-highest transition-colors">
+<div class="flex items-center gap-4">
+<span class="text-lg font-black text-outline/30 italic">03</span>
+<div class="flex flex-col">
+<span class="text-sm font-bold">Lexical_Lara</span>
+<span class="text-[10px] text-on-surface-variant">Win Streak: 5</span>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="text-right">
+<div class="text-xs font-bold text-secondary">Elite</div>
+<div class="text-[10px] text-outline">Rating: 1,540</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant" data-icon="bolt">bolt</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Mode Select (Bento Style) -->
+<section class="flex flex-col gap-6">
+<h2 class="text-xl font-bold flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-fixed" data-icon="swords">swords</span>
+                Choose Your Arena
+            </h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="neo-raised p-6 rounded-3xl group cursor-pointer hover:-translate-y-2 transition-transform relative overflow-hidden h-48">
+<div class="absolute -right-4 -bottom-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[120px]" data-icon="timer">timer</span>
+</div>
+<div class="relative z-10 flex flex-col justify-between h-full">
+<div>
+<h3 class="text-lg font-extrabold text-on-primary-container">Blitz Mode</h3>
+<p class="text-sm text-on-surface-variant mt-2 max-w-[150px]">30 second rounds. Rapid fire vocabulary.</p>
+</div>
+<div class="flex items-center gap-2 text-primary font-bold text-sm">
+                            Play Now <span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</div>
+<div class="neo-inset p-6 rounded-3xl group cursor-pointer relative overflow-hidden h-48 border-2 border-primary/20">
+<div class="absolute -right-4 -bottom-4 opacity-10">
+<span class="material-symbols-outlined text-[120px]" data-icon="emoji_events">emoji_events</span>
+</div>
+<div class="relative z-10 flex flex-col justify-between h-full">
+<div>
+<div class="bg-primary/20 text-primary text-[10px] uppercase font-black px-2 py-0.5 rounded-full w-fit mb-2">Ranked</div>
+<h3 class="text-lg font-extrabold text-on-primary-container">Competitive Queue</h3>
+<p class="text-sm text-on-surface-variant mt-2 max-w-[150px]">Standard matches. Gain or lose Rating Points.</p>
+</div>
+<div class="flex items-center gap-2 text-primary font-bold text-sm">
+                            Searching... <span class="w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span>
+</div>
+</div>
+</div>
+<div class="neo-raised p-6 rounded-3xl group cursor-pointer hover:-translate-y-2 transition-transform relative overflow-hidden h-48">
+<div class="absolute -right-4 -bottom-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[120px]" data-icon="school">school</span>
+</div>
+<div class="relative z-10 flex flex-col justify-between h-full">
+<div>
+<h3 class="text-lg font-extrabold text-on-primary-container">Practice VS AI</h3>
+<p class="text-sm text-on-surface-variant mt-2 max-w-[150px]">Hone your skills against our semantic engine.</p>
+</div>
+<div class="flex items-center gap-2 text-primary font-bold text-sm">
+                            Start Session <span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation (Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-surface dark:bg-inverse-surface shadow-[0_-4px_12px_rgba(89,81,180,0.08)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="text-[10px] font-medium mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="text-[10px] font-bold mt-1">Learn</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="text-[10px] font-medium mt-1">Social</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="text-[10px] font-medium mt-1">Profile</span>
+</a>
+</nav>
+<!-- Dynamic Overlay for Search (Simulating finding opponent) -->
+<script>
+        // Simple micro-interaction for the search text
+        const searchMessages = ["Finding Opponent...", "Analyzing Skills...", "matching Latency...", "Preparing Arena...", "Almost there..."];
+        let msgIndex = 0;
+        const msgEl = document.querySelector('h3.text-xl.font-bold.text-on-surface-variant');
+        
+        setInterval(() => {
+            msgIndex = (msgIndex + 1) % searchMessages.length;
+            msgEl.style.opacity = '0';
+            setTimeout(() => {
+                msgEl.innerText = searchMessages[msgIndex];
+                msgEl.style.opacity = '1';
+            }, 300);
+        }, 3000);
+
+        // Transition style for the text change
+        msgEl.style.transition = 'opacity 0.3s ease';
+    </script>
+</body></html>

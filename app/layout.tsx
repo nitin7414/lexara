@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Inter } from "next/font/google";
+import { Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'});
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
+  variable: "--font-sans",
 });
 
 const geistMono = Geist_Mono({
@@ -30,23 +28,24 @@ export default function RootLayout({
     <ClerkProvider
       appearance={{
         variables: {
-          colorPrimary: "hsl(var(--primary))",
-          colorBackground: "hsl(var(--background))",
-          colorText: "hsl(var(--foreground))",
-          colorTextSecondary: "hsl(var(--muted-foreground))",
-          colorInputBackground: "hsl(var(--background))",
-          colorInputText: "hsl(var(--foreground))",
-          colorBorder: "hsl(var(--border))",
+          colorPrimary: "var(--primary)",
+          colorBackground: "var(--surface-container-lowest)",
+          colorText: "var(--foreground)",
+          colorTextSecondary: "var(--on-surface-variant)",
+          colorInputBackground: "var(--surface-container-low)",
+          colorInputText: "var(--foreground)",
+          colorBorder: "var(--border)",
           borderRadius: "var(--radius)",
         },
       }}
     >
       <html
         lang="en"
-        className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", inter.variable)}
+        className={cn("h-full", "antialiased", plusJakartaSans.variable, geistMono.variable, "font-sans")}
       >
         <head>
           <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+          <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
         </head>
         <body className="min-h-full flex flex-col">{children}</body>
       </html>

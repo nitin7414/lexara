@@ -89,10 +89,10 @@ export default function OnboardingPage() {
                 onClick={() => setSelectedGoal(goal.id)}
                 disabled={loading}
                 className={cn(
-                  "w-full text-left flex items-center p-4 rounded-xl border transition-all duration-200 select-none cursor-pointer",
+                  "w-full text-left flex items-center p-4 rounded-2xl border transition-all duration-200 select-none cursor-pointer",
                   isSelected
-                    ? "bg-lexara-100 border-2 border-lexara-500 p-[15px]" // 2px border compensates 1px padding
-                    : "bg-white border border-[#E8E6FF] hover:bg-zinc-50/60"
+                    ? "bg-lexara-100 border-2 border-lexara-500 p-[15px] rounded-2xl" // 2px border compensates 1px padding
+                    : "bg-white border border-[#1A1730]/5 hover:bg-zinc-50/60"
                 )}
               >
                 {/* Left Icon using context-colored IconBox */}

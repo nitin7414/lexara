@@ -15,7 +15,7 @@ export function StatCard({ value, label, icon, context, className }: StatCardPro
   return (
     <div
       className={cn(
-        "bg-lexara-100 dark:bg-lexara-dark-elevated p-4 rounded-xl flex flex-col justify-between select-none min-h-[102px]",
+        "bg-lexara-100 dark:bg-lexara-dark-elevated p-4 rounded-2xl flex flex-col justify-between select-none min-h-[102px]",
         className
       )}
     >

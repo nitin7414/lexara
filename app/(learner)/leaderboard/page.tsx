@@ -53,15 +53,6 @@ export default function LeaderboardPage() {
     return `${monday.toLocaleDateString("en-US", options)} – ${sunday.toLocaleDateString("en-US", options)}`;
   };
 
-  // Helper to extract HSL hue deterministically for custom bar styling
-  const getAvatarHue = (str: string) => {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    return Math.abs(hash) % 360;
-  };
-
   if (loading) {
     return <LeaderboardSkeleton />;
   }
@@ -72,47 +63,51 @@ export default function LeaderboardPage() {
 
   const podiumItems = leaderboard.slice(0, 3);
 
-  // visual order: [2nd, 1st, 3rd]
+  // Visual layout order: [2nd, 1st, 3rd]
   const orderedPodium = [];
   if (podiumItems[1]) orderedPodium.push({ ...podiumItems[1], rank: 2 });
   if (podiumItems[0]) orderedPodium.push({ ...podiumItems[0], rank: 1 });
   if (podiumItems[2]) orderedPodium.push({ ...podiumItems[2], rank: 3 });
 
   return (
-    <div className="space-y-6 font-sans select-none text-lexara-900">
-      {/* Tab Switcher */}
-      <div className="flex border-b border-[#E8E6FF]">
-        <button
-          onClick={() => setActiveTab("friends")}
-          className={cn(
-            "flex-1 py-3 text-center text-sm font-extrabold transition-all border-b-2 cursor-pointer",
-            activeTab === "friends"
-              ? "border-[#7F77DD] text-[#7F77DD]"
-              : "border-transparent text-zinc-400 hover:text-zinc-500"
-          )}
-        >
-          Friends
-        </button>
-        <button
-          onClick={() => setActiveTab("global")}
-          className={cn(
-            "flex-1 py-3 text-center text-sm font-extrabold transition-all border-b-2 cursor-pointer",
-            activeTab === "global"
-              ? "border-[#7F77DD] text-[#7F77DD]"
-              : "border-transparent text-zinc-400 hover:text-zinc-500"
-          )}
-        >
-          Global
-        </button>
+    <div className="space-y-6 font-sans select-none text-on-surface">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 select-none">
+        <h1 className="text-xl font-bold tracking-tight">Social Arena</h1>
+        {/* Tab Switcher */}
+        <div className="flex bg-surface-container p-1 rounded-xl w-fit border border-outline-variant/35">
+          <button
+            onClick={() => setActiveTab("friends")}
+            className={cn(
+              "px-6 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all cursor-pointer border-none",
+              activeTab === "friends"
+                ? "bg-primary-container text-on-primary-container shadow-sm"
+                : "text-on-surface-variant hover:text-primary"
+            )}
+          >
+            Friends
+          </button>
+          <button
+            onClick={() => setActiveTab("global")}
+            className={cn(
+              "px-6 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all cursor-pointer border-none",
+              activeTab === "global"
+                ? "bg-primary-container text-on-primary-container shadow-sm"
+                : "text-on-surface-variant hover:text-primary"
+            )}
+          >
+            Global
+          </button>
+        </div>
       </div>
 
       {activeTab === "global" ? (
-        <div className="bg-white border border-[#E8E6FF] p-8 rounded-xl text-center space-y-3">
+        <div className="bg-surface-container-lowest border border-outline-variant/10 p-8 rounded-2xl text-center space-y-3">
           <div className="flex justify-center">
             <IconBox context="info" icon="ti-world" size="md" />
           </div>
-          <h3 className="text-[12px] font-bold text-lexara-900">Global Leaderboard</h3>
-          <p className="text-[10px] text-zinc-400 max-w-xs mx-auto leading-relaxed">
+          <h3 className="text-xs font-bold text-on-surface">Global Leaderboard</h3>
+          <p className="text-[10px] text-on-surface-variant max-w-xs mx-auto leading-relaxed">
             Coming soon: Compete globally with language learners from all over the world.
           </p>
         </div>
@@ -120,10 +115,10 @@ export default function LeaderboardPage() {
         <div className="space-y-6">
           {/* Week period subtitle */}
           <div className="text-center">
-            <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
+            <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
               Weekly Period
             </p>
-            <p className="text-[11px] font-extrabold text-lexara-800 mt-0.5">
+            <p className="text-[11px] font-extrabold text-on-surface mt-0.5">
               {getWeekRangeString()}
             </p>
           </div>
@@ -135,11 +130,7 @@ export default function LeaderboardPage() {
                 const isMe = player.id === currentUserId;
                 const isFirst = player.rank === 1;
                 const isSecond = player.rank === 2;
-                
-                const hue = getAvatarHue(player.name);
-                const barBg = `hsl(${hue}, 65%, 93%)`;
-                const barBorder = `1px solid hsl(${hue}, 65%, 82%)`;
-                
+
                 return (
                   <div
                     key={player.id}
@@ -148,19 +139,19 @@ export default function LeaderboardPage() {
                     {/* User profile avatar */}
                     <div className="relative">
                       {isFirst && (
-                        <i className="ti ti-crown text-[#BA7517] text-lg animate-bounce block mb-1.5 leading-none" />
+                        <i className="ti ti-crown text-tertiary text-lg animate-bounce block mb-1.5 leading-none" />
                       )}
                       <Avatar
                         name={player.name}
                         imageUrl={player.imageUrl}
                         size={isFirst ? "lg" : "md"}
-                        className={cn(isMe ? "border-[#7F77DD]" : "border-white")}
+                        className={cn(isMe ? "border-primary" : "border-outline-variant/30")}
                       />
                       <div
                         className={cn(
-                          "absolute -bottom-2 left-1/2 -translate-x-1/2 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black text-white",
+                          "absolute -bottom-2 left-1/2 -translate-x-1/2 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black text-white border border-outline-variant/35",
                           isFirst
-                            ? "bg-[#BA7517]"
+                            ? "bg-tertiary"
                             : isSecond
                             ? "bg-zinc-400"
                             : "bg-amber-700"
@@ -170,30 +161,28 @@ export default function LeaderboardPage() {
                       </div>
                     </div>
 
-                    <span className="text-[10px] font-bold text-lexara-800 mt-4 truncate w-full px-1">
+                    <span className="text-[10px] font-bold text-on-surface mt-4 truncate w-full px-1">
                       {player.name.split(" ")[0]}
                     </span>
-                    <span className="text-[9px] font-semibold text-zinc-400 mt-0.5 flex items-center justify-center gap-0.5">
+                    <span className="text-[9px] font-semibold text-on-surface-variant mt-0.5 flex items-center justify-center gap-0.5">
                       {player.streak}
-                      <i className="ti ti-flame text-[#7F77DD] text-[10px]" />
+                      <i className="ti ti-flame text-tertiary text-[10px]" />
                     </span>
 
                     {/* Dynamic Podium Column Bar */}
                     <div
-                      style={{
-                        backgroundColor: barBg,
-                        border: barBorder,
-                        borderBottom: "none",
-                      }}
                       className={cn(
-                        "w-full rounded-t-xl mt-3 flex flex-col justify-end p-2 transition-all",
-                        isFirst ? "h-24" : isSecond ? "h-18" : "h-14"
+                        "w-full rounded-t-xl mt-3 flex flex-col justify-end p-2 transition-all border border-b-0 border-outline-variant/10",
+                        isFirst
+                          ? "h-24 bg-primary-container/20 border-primary/20 backdrop-blur-sm"
+                          : "h-18 bg-surface-container/30",
+                        isSecond ? "h-18" : "h-14"
                       )}
                     >
-                      <span className="text-xs font-black text-[#534AB7]">
+                      <span className="text-xs font-black text-primary">
                         {player.weeklyXP}
                       </span>
-                      <span className="text-[8px] font-black text-lexara-600 uppercase tracking-wider mt-0.5">
+                      <span className="text-[8px] font-black text-on-surface-variant uppercase tracking-wider mt-0.5">
                         XP
                       </span>
                     </div>
@@ -205,19 +194,19 @@ export default function LeaderboardPage() {
 
           {/* Leaderboard list */}
           {leaderboard.length === 0 ? (
-            <div className="bg-white border border-[#E8E6FF] p-8 rounded-xl text-center space-y-4">
-              <p className="text-[11px] font-semibold text-zinc-500">
+            <div className="bg-surface-container-lowest border border-outline-variant/10 p-8 rounded-2xl text-center space-y-4">
+              <p className="text-[11px] font-semibold text-on-surface-variant">
                 Add friends to see how you compare.
               </p>
               <Link
                 href="/friends"
-                className="inline-block px-5 py-2 bg-[#7F77DD] text-white text-[11px] font-bold rounded-lg uppercase tracking-wider"
+                className="inline-block px-5 py-2 bg-primary text-on-primary text-[11px] font-bold rounded-lg uppercase tracking-wider border-none"
               >
                 Add Friends
               </Link>
             </div>
           ) : (
-            <div className="bg-white border border-[#E8E6FF] rounded-xl overflow-hidden divide-y divide-[#E8E6FF]">
+            <div className="bg-surface-container-lowest border border-outline-variant/10 rounded-2xl overflow-hidden divide-y divide-outline-variant/10">
               {leaderboard.map((player, index) => {
                 const isMe = player.id === currentUserId;
                 const rank = index + 1;
@@ -227,12 +216,14 @@ export default function LeaderboardPage() {
                     key={player.id}
                     className={cn(
                       "flex items-center justify-between p-4 transition-colors",
-                      isMe ? "bg-[#F8F7FF] rounded-lg border-2 border-[#E8E6FF] m-1 p-[14px]" : "bg-transparent"
+                      isMe
+                        ? "bg-primary-container text-on-primary-container border-2 border-primary/20 m-1 rounded-xl p-[14px]"
+                        : "bg-transparent hover:bg-surface-container-low"
                     )}
                   >
                     {/* Left Rank details */}
                     <div className="flex items-center gap-3">
-                      <span className="w-5 text-center text-xs font-black text-zinc-400">
+                      <span className="w-5 text-center text-xs font-black text-on-surface-variant">
                         {rank}
                       </span>
                       <Avatar name={player.name} imageUrl={player.imageUrl} size="sm" />
@@ -240,24 +231,27 @@ export default function LeaderboardPage() {
                         <span
                           className={cn(
                             "text-xs font-bold",
-                            isMe ? "text-[#7F77DD]" : "text-lexara-900"
+                            isMe ? "text-on-primary-container" : "text-on-surface"
                           )}
                         >
                           {player.name}
                         </span>
-                        <span className="text-[10px] font-semibold text-zinc-400 flex items-center gap-0.5 mt-0.5">
+                        <span className="text-[10px] font-semibold text-on-surface-variant/80 flex items-center gap-0.5 mt-0.5">
                           {player.streak} day streak
-                          <i className="ti ti-flame text-[#7F77DD] text-xs leading-none" />
+                          <i className="ti ti-flame text-tertiary text-xs leading-none" />
                         </span>
                       </div>
                     </div>
 
                     {/* Right XP details */}
                     <div className="text-right">
-                      <span className="text-xs font-black text-lexara-800">
+                      <span className={cn(
+                        "text-xs font-black",
+                        isMe ? "text-on-primary-container" : "text-on-surface"
+                      )}>
                         {player.weeklyXP}
                       </span>
-                      <span className="text-[9px] font-bold text-zinc-400 block uppercase tracking-wide">
+                      <span className="text-[9px] font-bold text-on-surface-variant/85 block uppercase tracking-wide">
                         XP this week
                       </span>
                     </div>
@@ -276,32 +270,32 @@ function LeaderboardSkeleton() {
   return (
     <div className="space-y-6 animate-pulse select-none">
       <div className="flex gap-4">
-        <div className="h-10 flex-1 bg-zinc-200 rounded-lg" />
-        <div className="h-10 flex-1 bg-zinc-200 rounded-lg" />
+        <div className="h-10 flex-1 bg-surface-container rounded-lg" />
+        <div className="h-10 flex-1 bg-surface-container rounded-lg" />
       </div>
-      <div className="h-44 bg-zinc-200 rounded-xl" />
-      <div className="h-32 bg-zinc-200 rounded-xl" />
+      <div className="h-44 bg-surface-container rounded-xl" />
+      <div className="h-32 bg-surface-container rounded-xl" />
     </div>
   );
 }
 
 function LeaderboardError() {
   return (
-    <div className="bg-white border border-[#E8E6FF] p-8 rounded-xl text-center space-y-4 font-sans select-none">
-      <div className="w-12 h-12 bg-red-100 text-[#D85A30] rounded-full flex items-center justify-center mx-auto">
+    <div className="bg-surface-container-lowest border border-outline-variant/10 p-8 rounded-2xl text-center space-y-4 font-sans select-none text-on-surface">
+      <div className="w-12 h-12 bg-error/10 text-error rounded-full flex items-center justify-center mx-auto">
         <i className="ti ti-alert-triangle text-xl" />
       </div>
       <div className="space-y-1">
-        <h3 className="text-[12px] font-bold text-lexara-900">
+        <h3 className="text-[12px] font-bold text-on-surface">
           Something went wrong.
         </h3>
-        <p className="text-[10px] text-zinc-400">
+        <p className="text-[10px] text-on-surface-variant">
           We couldn't load the leaderboard. Try again.
         </p>
       </div>
       <button
         onClick={() => window.location.reload()}
-        className="px-6 py-2.5 bg-[#7F77DD] text-white text-xs font-bold rounded-lg uppercase tracking-wider border-none"
+        className="px-6 py-2.5 bg-primary text-on-primary text-xs font-bold rounded-lg uppercase tracking-wider border-none cursor-pointer"
       >
         Try again
       </button>

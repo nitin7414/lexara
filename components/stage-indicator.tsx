@@ -39,7 +39,7 @@ export function StageIndicator({ currentStage, onClose, className }: StageIndica
       )}
 
       {/* Progress Bar Track */}
-      <div className="flex-1 h-[6px] bg-[#E8E6FF] dark:bg-[#3C3489] rounded-full overflow-hidden">
+      <div className="flex-1 h-[6px] bg-[#f0ebff] dark:bg-[#3C3489] rounded-full overflow-hidden">
         {/* Progress Bar Fill */}
         <div
           style={{ width: `${percent}%` }}

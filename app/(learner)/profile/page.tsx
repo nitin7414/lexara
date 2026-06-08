@@ -116,8 +116,8 @@ export default function ProfilePage() {
 
   return (
     <div className="space-y-6 font-sans select-none relative text-lexara-900">
-      {/* Header Profile Info (Card bg: FFFFFF with E8E6FF border) */}
-      <div className="bg-white border border-[#E8E6FF] rounded-xl p-6 flex flex-col items-center text-center space-y-4">
+      {/* Header Profile Info (Card bg: FFFFFF with 1A1730/5 border) */}
+      <div className="bg-white border border-[#1A1730]/5 rounded-2xl p-6 flex flex-col items-center text-center space-y-4">
         <Avatar name={profile.name} imageUrl={profile.imageUrl} size="xl" />
         
         <div>
@@ -145,12 +145,12 @@ export default function ProfilePage() {
       </div>
 
       {/* Stats recap grid (Tinted cards: bg #EEEDFE, no border) */}
-      <div className="bg-white border border-[#E8E6FF] rounded-xl p-5 space-y-4">
+      <div className="bg-white border border-[#1A1730]/5 rounded-2xl p-5 space-y-4">
         <h3 className="text-[11px] font-bold text-lexara-600 uppercase tracking-wider">
           Stats Recap
         </h3>
         <div className="grid grid-cols-2 gap-3">
-          <div className="bg-[#EEEDFE] p-3.5 rounded-xl flex flex-col justify-between min-h-[84px]">
+          <div className="bg-[#EEEDFE] p-3.5 rounded-2xl flex flex-col justify-between min-h-[84px]">
             <span className="text-[10px] font-bold text-lexara-600 uppercase tracking-wider leading-none">
               Streak
             </span>
@@ -159,38 +159,38 @@ export default function ProfilePage() {
               <i className="ti ti-flame text-[#7F77DD]" />
             </span>
           </div>
-          <div className="bg-[#EEEDFE] p-3.5 rounded-xl flex flex-col justify-between min-h-[84px]">
+          <div className="bg-[#EEEDFE] p-3.5 rounded-2xl flex flex-col justify-between min-h-[84px]">
             <span className="text-[10px] font-bold text-lexara-600 uppercase tracking-wider leading-none">
               Words
             </span>
             <span className="text-[14px] font-bold text-lexara-900 mt-2 flex items-center gap-1 leading-none">
               {profile.totalWords} words
-              <i className="ti ti-book-2 text-[#1D9E75]" />
+              <i className="ti ti-book-2 text-[#2DD4BF]" />
             </span>
           </div>
-          <div className="bg-[#EEEDFE] p-3.5 rounded-xl flex flex-col justify-between min-h-[84px]">
+          <div className="bg-[#EEEDFE] p-3.5 rounded-2xl flex flex-col justify-between min-h-[84px]">
             <span className="text-[10px] font-bold text-lexara-600 uppercase tracking-wider leading-none">
               Accuracy
             </span>
             <span className="text-[14px] font-bold text-lexara-900 mt-2 flex items-center gap-1 leading-none">
               {profile.accuracy}%
-              <i className="ti ti-checkbox text-[#534AB7]" />
+              <i className="ti ti-checkbox text-[#7F77DD]" />
             </span>
           </div>
-          <div className="bg-[#EEEDFE] p-3.5 rounded-xl flex flex-col justify-between min-h-[84px]">
+          <div className="bg-[#EEEDFE] p-3.5 rounded-2xl flex flex-col justify-between min-h-[84px]">
             <span className="text-[10px] font-bold text-lexara-600 uppercase tracking-wider leading-none">
               Days Active
             </span>
             <span className="text-[14px] font-bold text-lexara-900 mt-2 flex items-center gap-1 leading-none">
               {profile.totalDays} active
-              <i className="ti ti-calendar text-[#BA7517]" />
+              <i className="ti ti-calendar text-[#FBBF24]" />
             </span>
           </div>
         </div>
       </div>
 
       {/* Settings list */}
-      <div className="bg-white border border-[#E8E6FF] rounded-xl overflow-hidden divide-y divide-[#E8E6FF]">
+      <div className="bg-white border border-[#1A1730]/5 rounded-2xl overflow-hidden divide-y divide-[#1A1730]/5">
         {/* Toggle Notification */}
         <div className="flex items-center justify-between p-4">
           <div className="space-y-0.5">
@@ -226,7 +226,7 @@ export default function ProfilePage() {
             type="time"
             value={reminderTime}
             onChange={(e) => setReminderTime(e.target.value)}
-            className="border border-[#E8E6FF] bg-zinc-50 rounded-lg px-2 py-1 text-xs font-bold text-zinc-700 outline-none focus:border-[#7F77DD]"
+            className="border border-[#1A1730]/5 bg-zinc-50 rounded-md px-2 py-1 text-xs font-bold text-zinc-700 outline-none focus:border-[#7F77DD]"
           />
         </div>
 
@@ -261,7 +261,7 @@ export default function ProfilePage() {
       {/* Goal Selector Modal Sheet */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-end md:items-center justify-center p-4">
-          <div className="bg-white w-full max-w-sm rounded-t-2xl md:rounded-2xl p-6 space-y-6 relative border border-[#E8E6FF] animate-in slide-in-from-bottom duration-200">
+          <div className="bg-white w-full max-w-sm rounded-t-2xl md:rounded-2xl p-6 space-y-6 relative border border-[#1A1730]/5 animate-in slide-in-from-bottom duration-200">
             {/* Modal Header */}
             <div className="flex justify-between items-start">
               <div className="space-y-0.5">
@@ -292,8 +292,8 @@ export default function ProfilePage() {
                     className={cn(
                       "w-full text-left flex items-center p-3 rounded-xl border transition-all cursor-pointer",
                       isSelected
-                        ? "bg-[#EEEDFE] border-2 border-[#7F77DD] p-[11px]"
-                        : "bg-white border border-[#E8E6FF] hover:bg-zinc-50"
+                        ? "bg-[#EEEDFE] border-2 border-[#7F77DD] p-[11px] rounded-2xl"
+                        : "bg-white border border-[#1A1730]/5 hover:bg-zinc-50 rounded-2xl"
                     )}
                   >
                     {/* IconBox context-colored badge */}
@@ -336,7 +336,7 @@ function ProfileSkeleton() {
 
 function ProfileError() {
   return (
-    <div className="bg-white border border-[#E8E6FF] p-8 rounded-xl text-center space-y-4 font-sans select-none">
+    <div className="bg-white border border-[#1A1730]/5 p-8 rounded-2xl text-center space-y-4 font-sans select-none">
       <div className="w-12 h-12 bg-red-100 text-[#D85A30] rounded-full flex items-center justify-center mx-auto">
         <i className="ti ti-alert-triangle text-xl" />
       </div>

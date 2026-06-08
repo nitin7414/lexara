@@ -419,6 +419,13 @@ export default function LearnPage() {
           {/* CTAs */}
           <div className="w-full space-y-2">
             <button
+              onClick={() => router.push("/battle")}
+              className="w-full bg-[#7F77DD] hover:brightness-110 text-white py-[11px] rounded-xl text-[13px] font-semibold uppercase tracking-wider transition-all cursor-pointer border-none flex items-center justify-center gap-1.5"
+            >
+              <i className="ti ti-swords" />
+              <span>Enter Word Battle</span>
+            </button>
+            <button
               onClick={handleShare}
               className="w-full bg-[#2D2550] hover:bg-[#2D2550]/80 text-[#CECBF6] py-[11px] rounded-xl text-[13px] font-medium uppercase tracking-wider transition-all cursor-pointer border-none"
             >
@@ -426,7 +433,7 @@ export default function LearnPage() {
             </button>
             <button
               onClick={() => router.push("/dashboard")}
-              className="w-full bg-[#7F77DD] hover:opacity-95 text-white py-[11px] rounded-xl text-[13px] font-medium uppercase tracking-wider transition-all cursor-pointer border-none"
+              className="w-full bg-[#2D2550] hover:bg-[#2D2550]/60 text-[#CECBF6] py-[11px] rounded-xl text-[13px] font-medium uppercase tracking-wider transition-all cursor-pointer border-none"
             >
               Back to home
             </button>
@@ -486,15 +493,24 @@ function LearnCompletedAlready() {
           Daily words complete!
         </h3>
         <p className="text-[11px] text-[#AFA9EC] leading-relaxed">
-          You've already reviewed all daily session words for today. Come back tomorrow!
+          You've already reviewed all daily session words for today. Enter the PvP arena to continue practice!
         </p>
       </div>
-      <button
-        onClick={() => router.push("/dashboard")}
-        className="w-full py-[11px] bg-[#7F77DD] text-white text-[13px] font-medium rounded-xl uppercase tracking-wider border-none cursor-pointer"
-      >
-        Back to home
-      </button>
+      <div className="space-y-3">
+        <button
+          onClick={() => router.push("/battle")}
+          className="w-full py-[11px] bg-[#7F77DD] hover:brightness-110 text-white text-[13px] font-semibold rounded-xl uppercase tracking-wider border-none cursor-pointer flex items-center justify-center gap-1.5"
+        >
+          <i className="ti ti-swords" />
+          <span>Word Battle Arena</span>
+        </button>
+        <button
+          onClick={() => router.push("/dashboard")}
+          className="w-full py-[11px] bg-[#2D2550] hover:bg-[#2D2550]/80 text-[#CECBF6] text-[13px] font-semibold rounded-xl uppercase tracking-wider border-none cursor-pointer"
+        >
+          Back to home
+        </button>
+      </div>
     </div>
   );
 }

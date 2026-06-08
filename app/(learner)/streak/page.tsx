@@ -69,7 +69,7 @@ export default function StreakPage() {
   return (
     <div className="space-y-6 font-sans select-none">
       {/* Large Streak Display Header (Page bg is F4F3FF, card bg is FFFFFF with E8E6FF border) */}
-      <div className="bg-white border border-[#E8E6FF] rounded-xl p-6 flex flex-col items-center text-center space-y-4">
+      <div className="bg-white border border-[#1A1730]/5 rounded-2xl p-6 flex flex-col items-center text-center space-y-4">
         {data && <StreakDisplay count={data.currentStreak} size="lg" />}
         <div>
           <h2 className="text-[15px] font-medium text-lexara-900 leading-none">
@@ -82,7 +82,7 @@ export default function StreakPage() {
       </div>
 
       {/* 14-Day Calendar Strip */}
-      <div className="bg-white border border-[#E8E6FF] rounded-xl p-5 space-y-4">
+      <div className="bg-white border border-[#1A1730]/5 rounded-2xl p-5 space-y-4">
         <div>
           <h3 className="text-[11px] font-bold text-lexara-600 uppercase tracking-wider">
             Last 14 Days
@@ -121,7 +121,7 @@ export default function StreakPage() {
 
       {/* Stats Summary Row (Stat cards use EEEDFE, no border) */}
       <div className="grid grid-cols-3 gap-3">
-        <div className="bg-[#EEEDFE] p-4 rounded-xl text-center">
+        <div className="bg-[#EEEDFE] p-4 rounded-2xl text-center">
           <span className="text-[9px] font-bold text-lexara-600 uppercase tracking-widest block leading-none">
             Days Active
           </span>
@@ -129,7 +129,7 @@ export default function StreakPage() {
             {data?.totalDays}
           </span>
         </div>
-        <div className="bg-[#EEEDFE] p-4 rounded-xl text-center">
+        <div className="bg-[#EEEDFE] p-4 rounded-2xl text-center">
           <span className="text-[9px] font-bold text-lexara-600 uppercase tracking-widest block leading-none">
             Words Learned
           </span>
@@ -137,7 +137,7 @@ export default function StreakPage() {
             {data?.totalWords}
           </span>
         </div>
-        <div className="bg-[#EEEDFE] p-4 rounded-xl text-center">
+        <div className="bg-[#EEEDFE] p-4 rounded-2xl text-center">
           <span className="text-[9px] font-bold text-lexara-600 uppercase tracking-widest block leading-none">
             Avg Accuracy
           </span>
@@ -148,7 +148,7 @@ export default function StreakPage() {
       </div>
 
       {/* Streak Shield Section */}
-      <div className="bg-white border border-dashed border-[#E8E6FF] p-6 rounded-xl text-center space-y-3">
+      <div className="bg-white border border-dashed border-[#1A1730]/10 p-6 rounded-2xl text-center space-y-3">
         <div className="flex justify-center">
           <IconBox context="info" icon="ti-shield" size="md" />
         </div>
@@ -181,7 +181,7 @@ function StreakSkeleton() {
 
 function StreakError() {
   return (
-    <div className="bg-white border border-[#E8E6FF] p-8 rounded-xl text-center space-y-4 font-sans select-none">
+    <div className="bg-white border border-[#1A1730]/5 p-8 rounded-2xl text-center space-y-4 font-sans select-none">
       <div className="w-12 h-12 bg-red-100 text-[#D85A30] rounded-full flex items-center justify-center mx-auto">
         <i className="ti ti-alert-triangle text-xl" />
       </div>

@@ -118,6 +118,7 @@ export async function GET() {
 
     return NextResponse.json({
       streak: currentStreak,
+      longestStreak: user.streak?.longestStreak || 0,
       wordCount: totalWordsLearned,
       rank,
       accuracy,
